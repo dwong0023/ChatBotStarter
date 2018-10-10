@@ -2,6 +2,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 /**
+ * MANAGER - DANIYAH WONG
  * A program to carry on conversations with a human user.
  * This version:
  * @author Brooklyn Tech CS Department
@@ -42,7 +43,7 @@ public class ChatBot3
 	 */	
 	public String getGreeting()
 	{
-		return "Hi, what is up?";
+		return "Hello, this is the manager. Are you calling for the job offer?";
 	}
 	
 	/**
@@ -63,22 +64,25 @@ public class ChatBot3
 
 		else if (findKeyword(statement, "no") >= 0)
 		{
-			response = "Why so negative?";
+			response = "Then is there an issue that you need to report?";
                 	emotion--;
 		}
 		
-		else if (findKeyword(statement, "levin") >= 0)
+		else if (findKeyword(statement, "yes") >= 0)
 		{
-			response = "More like LevinTheDream amiright?";
+			response = "Alright. What is your name?";
 			emotion++;
+			statement = n.nextLine();
+			System.out.println(name(statement));
+			response = startJobInterview(name);
 		}
 
 		// Response transforming I want to statement
-		else if (findKeyword(statement, "I want to", 0) >= 0)
+		else if (findKeyword(statement, "I want to be the ", 0) >= 0)
 		{
 			response = transformIWantToStatement(statement);
 		}
-		else if (findKeyword(statement, "I want",0) >= 0)
+		else if (findKeyword(statement, "I want a salary of",0) >= 0)
 		{
 			response = transformIWantStatement(statement);
 		}	
@@ -107,9 +111,9 @@ public class ChatBot3
 			statement = statement.substring(0, statement
 					.length() - 1);
 		}
-		int psn = findKeyword (statement, "I want to", 0);
+		int psn = findKeyword (statement, "I want to be the ", 0);
 		String restOfStatement = statement.substring(psn + 9).trim();
-		return "Why do you want to " + restOfStatement + "?";
+		return "Why do you want to be the " + restOfStatement + "?";
 	}
 
 	
@@ -130,9 +134,9 @@ public class ChatBot3
 			statement = statement.substring(0, statement
 					.length() - 1);
 		}
-		int psn = findKeyword (statement, "I want", 0);
+		int psn = findKeyword (statement, "I want a salary of ", 0);
 		String restOfStatement = statement.substring(psn + 6).trim();
-		return "Would you really be happy if you had " + restOfStatement + "?";
+		return "Hm. A salary of $" + restOfStatement + ", you say? " + salaryResponse(restOfStatement);
 	}
 	
 	
@@ -159,6 +163,19 @@ public class ChatBot3
 		
 		String restOfStatement = statement.substring(psnOfI + 1, psnOfYou).trim();
 		return "Why do you " + restOfStatement + " me?";
+	}
+
+	public String salaryResponse(String moneyrequested)
+	{
+		int money = Integer.parseInt(moneyrequested);
+		if(money <= 0)
+		{
+			return "Isn't that a bit low?";
+		}
+		if(money >= 100000)
+		{
+			return "Isn't that a bit high?";
+		}
 	}
 	
 
