@@ -1,6 +1,6 @@
 import java.util.Random;
 import java.util.Scanner;
-
+// JESSE'S SIDE - CUSTOMER SUPPORT
 /**
  * A program to carry on conversations with a human user.
  * This version:
@@ -11,7 +11,8 @@ public class ChatBot2
 {
 	//emotion can alter the way our bot responds. Emotion can become more negative or positive over time.
 	int emotion = 0;
-
+	int problem = 0;
+	String problemObject = "";
 
 	/**
 	 * Runs the conversation for this particular chatbot, should allow switching to other chatbots.
@@ -41,7 +42,7 @@ public class ChatBot2
 	 */	
 	public String getGreeting()
 	{
-		return "Hi, what is up?";
+		return "Welcome to Disked Knee Eggs Dee™ customer support service.";
 	}
 	
 	/**
@@ -55,23 +56,23 @@ public class ChatBot2
 	{
 		String response = "";
 		
-		if (statement.length() == 0)
-		{
-			response = "Say something, please.";
+		if (statement.length() == 0) {
+			response = "I'm sorry, I didn't catch that.";
 		}
 
-		else if (findKeyword(statement, "no") >= 0)
-		{
-			response = "Why so negative?";
-                	emotion--;
-		}
-		
-		else if (findKeyword(statement, "levin") >= 0)
-		{
-			response = "More like LevinTheDream amiright?";
-			emotion++;
-		}
+        if (findKeyword(statement,"problem",0) >= 0 || findKeyword(statement,"issue",0) >= 0) {
+            problem ++;
+            if (findKeyword(statement,"with", 0) >= 0) {
+                if (findKeyword(statement, "my", statement.indexOf("my")) >= 0) {
+                    if (statement.substring(statement.length() - 1).equals(".")) {
+                        statement = statement.substring(statement.length() - 1);
+                    }
+                }
+            }
+            else {
 
+            }
+        }
 		// Response transforming I want to statement
 		else if (findKeyword(statement, "I want to", 0) >= 0)
 		{
