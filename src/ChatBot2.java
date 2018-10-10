@@ -65,7 +65,7 @@ public class ChatBot2
             if (findKeyword(statement,"with", 0) >= 0) {
                 if (findKeyword(statement, "my", statement.indexOf("my")) >= 0) {
                     if (statement.substring(statement.length() - 1).equals(".")) {
-                        statement = statement.substring(statement.length() - 1);
+                        statement = statement.substring(statement.length() - 1); //here
                     }
                 }
             }
