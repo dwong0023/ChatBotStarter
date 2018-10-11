@@ -108,7 +108,7 @@ public class ChatBot2
                     problemObject = statement.substring(findKeyword(statement, "my") + 3, findKeyword(statement, isare) - 1);
                 }
                     problemAdjective = statement.substring(findKeyword(statement, isare, 0) + isare.length() + 1);
-                response = "I see, so your " + problemObject + isare + " " + problemAdjective + ".";
+                response = "I see, so your " + problemObject + " " + isare + " " + problemAdjective + ".";
             }
             else if (statement.contains("can't") || statement.contains("cant") || statement.contains("won't") || statement.contains("wont") || statement.contains("not")) {
                 String notter = "";
@@ -116,6 +116,11 @@ public class ChatBot2
                 else if (statement.contains("not")){notter = "not";}
                 else if (statement.contains("wont")){notter = "wont";}
                 else if (statement.contains("cant")){notter = "cant";}
+                problemVerb = statement.substring(statement.indexOf(notter) + notter.length() + 1);
+                if (findKeyword(statement,"my",0) >= 0) {problemObject = statement.substring(findKeyword(statement,"my",0) + 3, statement.indexOf(notter));}
+                else {problemObject = statement.substring(0,statement.indexOf(notter));}
+                response = "I see, so your " + problemObject + " " + problemVerb + ".";
+                progress = 3;
             }
         }
 		// Response transforming I want to statement
