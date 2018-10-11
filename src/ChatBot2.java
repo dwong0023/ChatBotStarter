@@ -11,8 +11,10 @@ public class ChatBot2
 {
 	//emotion can alter the way our bot responds. Emotion can become more negative or positive over time.
 	int emotion = 0;
-	int problem = 0;
+	int progress = 0;
 	String problemObject = "";
+	String problemAdjective = "";
+	String name = "";
 
 	/**
 	 * Runs the conversation for this particular chatbot, should allow switching to other chatbots.
@@ -42,7 +44,7 @@ public class ChatBot2
 	 */	
 	public String getGreeting()
 	{
-		return "Welcome to Disked Knee Eggs Dee™ customer support service.";
+		return "Thank you for calling Eggs Dee™ customer support service. Can I get your name?";
 	}
 	
 	/**
@@ -55,33 +57,68 @@ public class ChatBot2
 	public String getResponse(String statement)
 	{
 		String response = "";
+        if (statement.substring(statement.length() - 1).equals(".")) {
+            statement = statement.substring(statement.length() - 1);
+        }
 		
 		if (statement.length() == 0) {
 			response = "I'm sorry, I didn't catch that.";
 		}
-
-        if (findKeyword(statement,"problem",0) >= 0 || findKeyword(statement,"issue",0) >= 0) {
-            problem ++;
-            if (findKeyword(statement,"with", 0) >= 0) {
-                if (findKeyword(statement, "my", statement.indexOf("my")) >= 0) {
-                    if (statement.substring(statement.length() - 1).equals(".")) {
-                        statement = statement.substring(statement.length() - 1); //here
+		else if (progress == 0) {
+		    name = statement; progress ++; response = "Hello," + name + ". How can I help you?";
+        }
+        else if (progress == 1) {
+            // if problem or issue is in the statement
+            if (statement.contains("problem") || statement.contains("issue")) {
+                progress++;
+                // if "problem with" is in the statement
+                if (statement.contains("with")) {
+                    // "problem with my" ...
+                    if (statement.contains("my")) {
+                        problemObject = statement.substring(findKeyword(statement,"my",0) + 3);
+                        // what comes after "problem with my" = problemObject
+                        response = "What seems to be the problem with your " + problemObject + ", " + name + "?";
+                        progress = 2;
                     }
+                    else { // problem with ...
+                        if (statement.substring(statement.length() - 1).equals(".")) {
+                            statement = statement.substring(statement.length() - 1);
+                        }
+                        problemObject = statement.substring(findKeyword(statement, "with ", 0) + 5);
+                        response = "What seems to be the problem with " + problemObject + "?";
+                        progress = 2;
+                    }
+                } else {
+                    response = "What's the issue?";
+                    progress = 2;
                 }
             }
-            else {
-
+            //my x is/are ...
+            else if (findKeyword(statement, "is", 0) >= 0 || findKeyword(statement, "are", 0) >= 0) {
+                String isare = "";
+                if (statement.contains("is")) {
+                    isare = "is";
+                }
+                else if (statement.contains("are")) {
+                    isare = "are";
+                }
+                progress = 3;
+                if (statement.contains("my")) {
+                    problemObject = statement.substring(findKeyword(statement, "my") + 3, findKeyword(statement, isare) - 1);
+                }
+                    problemAdjective = statement.substring(findKeyword(statement, isare, 0) + isare.length() + 1);
+                response = "I see, so your " + problemObject + isare + " " + problemAdjective + ".";
             }
         }
 		// Response transforming I want to statement
-		else if (findKeyword(statement, "I want to", 0) >= 0)
+		/*else if (findKeyword(statement, "I want to", 0) >= 0)
 		{
 			response = transformIWantToStatement(statement);
 		}
 		else if (findKeyword(statement, "I want",0) >= 0)
 		{
 			response = transformIWantStatement(statement);
-		}	
+		}	*/
 		else
 		{
 			response = getRandomResponse();
