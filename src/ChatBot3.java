@@ -12,30 +12,35 @@ public class ChatBot3
 {
 	//emotion can alter the way our bot responds. Emotion can become more negative or positive over time.
 	int emotion = 0;
-
+	int nocount = 0;
 
 
 	/**
 	 * Runs the conversation for this particular chatbot, should allow switching to other chatbots.
 	 * @param statement the statement typed by the user
 	 */
-	public void chatLoop(String statement)
+	public String chatLoop(String statement)
 	{
 		Scanner in = new Scanner (System.in);
 		System.out.println (getGreeting());
 
 
-		while (!statement.equals("Bye"))
+		while(!statement.equals("Bye") && emotion >= -3)
 		{
 
 
 			statement = in.nextLine();
 			//getResponse handles the user reply
 			System.out.println(getResponse(statement));
-
-
 		}
-
+		if(emotion <= -3)
+		{
+			return "The manager has hung up.";
+		}
+		else
+		{
+			return ".";
+		}
 	}
 	/**
 	 * Get a default greeting 	
@@ -43,7 +48,10 @@ public class ChatBot3
 	 */	
 	public String getGreeting()
 	{
-		return "Hello, this is the manager. Are you calling for the job offer?";
+		System.out.print("Hello, this is the manager. Who am I speaking to?");
+		Scanner newname = new Scanner(System.in);
+		String callername = newname.nextLine();
+		System.out.print("This is the Eggs company. Are you calling about the job offer?");
 	}
 	
 	/**
@@ -60,21 +68,14 @@ public class ChatBot3
 		if (statement.length() == 0)
 		{
 			response = "Say something, please.";
-		}
-
-		else if (findKeyword(statement, "no") >= 0)
-		{
-			response = "Then is there an issue that you need to report?";
-                	emotion--;
+			emotion--;
 		}
 		
-		else if (findKeyword(statement, "yes") >= 0)
+		else if (findKeyword(statement, "get a job") >= 0)
 		{
 			response = "Alright. What is your name?";
 			emotion++;
-			statement = n.nextLine();
-			System.out.println(name(statement));
-			response = startJobInterview(name);
+			response = startJobInterview(statement);
 		}
 
 		// Response transforming I want to statement
@@ -104,18 +105,15 @@ public class ChatBot3
 	{
 		//  Remove the final period, if there is one
 		statement = statement.trim();
-		String lastChar = statement.substring(statement
-				.length() - 1);
+		String lastChar = statement.substring(statement.length() - 1);
 		if (lastChar.equals("."))
 		{
-			statement = statement.substring(0, statement
-					.length() - 1);
+			statement = statement.substring(0, statement.length() - 1);
 		}
 		int psn = findKeyword (statement, "I want to be the ", 0);
-		String restOfStatement = statement.substring(psn + 9).trim();
+		String restOfStatement = statement.substring(psn + 17).trim();
 		return "Why do you want to be the " + restOfStatement + "?";
 	}
-
 	
 	/**
 	 * Take a statement with "I want <something>." and transform it into 
@@ -127,18 +125,29 @@ public class ChatBot3
 	{
 		//  Remove the final period, if there is one
 		statement = statement.trim();
-		String lastChar = statement.substring(statement
-				.length() - 1);
+		String lastChar = statement.substring(statement.length() - 1);
 		if (lastChar.equals("."))
 		{
-			statement = statement.substring(0, statement
-					.length() - 1);
+			statement = statement.substring(0, statement.length() - 1);
 		}
 		int psn = findKeyword (statement, "I want a salary of ", 0);
-		String restOfStatement = statement.substring(psn + 6).trim();
+		String restOfStatement = statement.substring(psn + 19).trim();
 		return "Hm. A salary of $" + restOfStatement + ", you say? " + salaryResponse(restOfStatement);
 	}
-	
+
+	private String qualifications(String statement)
+	{
+		//  Remove the final period, if there is one
+		statement = statement.trim();
+		String lastChar = statement.substring(statement.length() - 1);
+		if (lastChar.equals("."))
+		{
+			statement = statement.substring(0, statement.length() - 1);
+		}
+		int psn = findKeyword (statement, "I can ", 0);
+		String restOfStatement = statement.substring(psn + 6).trim();
+		return "So, you can " + restOfStatement + "? Interesting.";
+	}
 	
 	/**
 	 * Take a statement with "I <something> you" and transform it into 
@@ -165,19 +174,25 @@ public class ChatBot3
 		return "Why do you " + restOfStatement + " me?";
 	}
 
-	public String salaryResponse(String moneyrequested)
-	{
+	public String salaryResponse(String moneyrequested) {
 		int money = Integer.parseInt(moneyrequested);
-		if(money <= 0)
-		{
+		if (money <= 0) {
 			return "Isn't that a bit low?";
 		}
-		if(money >= 100000)
-		{
+		else if (money >= 100000) {
 			return "Isn't that a bit high?";
 		}
+		else
+		{
+			return "That seems somewhat reasonable.";
+		}
 	}
-	
+
+	public String startJobInterview(String name)
+	{
+		String namestring = name;
+		return namestring;
+	}
 
 	
 	
