@@ -30,7 +30,7 @@ public class ChatBotRunner
 
 
 
-			chatbot3.chatLoop(statement);
+			chatbot1.chatLoop(statement);
 
 
 			statement = in.nextLine();
