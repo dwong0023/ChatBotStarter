@@ -123,6 +123,35 @@ public class ChatBot2
                 progress = 3;
             }
         }
+        else if (progress == 2) {
+            if (statement.contains("is") || statement.contains("are")) {
+                String isare = "";
+                if (statement.contains("is")) {
+                    isare = "is";
+                }
+                else if (statement.contains("are")) {
+                    isare = "are";
+                }
+                progress = 3;
+                if (statement.contains("my")) {
+                    problemObject = statement.substring(findKeyword(statement, "my") + 3, findKeyword(statement, isare) - 1);
+                }
+                problemAdjective = statement.substring(findKeyword(statement, isare, 0) + isare.length() + 1);
+                response = "I see, so your " + problemObject + " " + isare + " " + problemAdjective + ".";
+            }
+            else if (statement.contains("can't") || statement.contains("cant") || statement.contains("won't") || statement.contains("wont") || statement.contains("not")) {
+                String notter = "";
+                if (statement.contains("can't") || statement.contains("won't")){notter = "'t";}
+                else if (statement.contains("not")){notter = "not";}
+                else if (statement.contains("wont")){notter = "wont";}
+                else if (statement.contains("cant")){notter = "cant";}
+                problemVerb = statement.substring(statement.indexOf(notter) + notter.length() + 1);
+                if (findKeyword(statement,"my",0) >= 0) {problemObject = statement.substring(findKeyword(statement,"my",0) + 3, statement.indexOf(notter));}
+                else {problemObject = statement.substring(0,statement.indexOf(notter));}
+                response = "I see, so your " + problemObject + " " + problemVerb + ".";
+                progress = 3;
+            }
+        }
 		// Response transforming I want to statement
 		/*else if (findKeyword(statement, "I want to", 0) >= 0)
 		{
