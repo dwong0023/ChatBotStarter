@@ -14,6 +14,7 @@ public class ChatBot2
 	int progress = 0;
 	String problemObject = "";
 	String problemAdjective = "";
+	String problemVerb = "";
 	String name = "";
 
 	/**
@@ -65,7 +66,7 @@ public class ChatBot2
 			response = "I'm sorry, I didn't catch that.";
 		}
 		else if (progress == 0) {
-		    name = statement; progress ++; response = "Hello," + name + ". How can I help you?";
+		    name = statement; progress ++; response = "Hello, " + name + ". How can I help you?";
         }
         else if (progress == 1) {
             // if problem or issue is in the statement
@@ -94,7 +95,7 @@ public class ChatBot2
                 }
             }
             //my x is/are ...
-            else if (findKeyword(statement, "is", 0) >= 0 || findKeyword(statement, "are", 0) >= 0) {
+            else if (statement.contains("is") || statement.contains("are")) {
                 String isare = "";
                 if (statement.contains("is")) {
                     isare = "is";
@@ -108,6 +109,13 @@ public class ChatBot2
                 }
                     problemAdjective = statement.substring(findKeyword(statement, isare, 0) + isare.length() + 1);
                 response = "I see, so your " + problemObject + isare + " " + problemAdjective + ".";
+            }
+            else if (statement.contains("can't") || statement.contains("cant") || statement.contains("won't") || statement.contains("wont") || statement.contains("not")) {
+                String notter = "";
+                if (statement.contains("can't") || statement.contains("won't")){notter = "'t";}
+                else if (statement.contains("not")){notter = "not";}
+                else if (statement.contains("wont")){notter = "wont";}
+                else if (statement.contains("cant")){notter = "cant";}
             }
         }
 		// Response transforming I want to statement
