@@ -13,6 +13,7 @@ public class ChatBot3
 	//emotion can alter the way our bot responds. Emotion can become more negative or positive over time.
 	int emotion = 0;
 	int nocount = 0;
+	String callername;
 
 
 	/**
@@ -33,13 +34,13 @@ public class ChatBot3
 			//getResponse handles the user reply
 			System.out.println(getResponse(statement));
 		}
-		if(emotion <= -3)
+		if(emotion == -3)
 		{
 			return "The manager has hung up.";
 		}
 		else
 		{
-			return ".";
+			return "...";
 		}
 	}
 	/**
@@ -48,10 +49,26 @@ public class ChatBot3
 	 */	
 	public String getGreeting()
 	{
-		System.out.print("Hello, this is the manager. Who am I speaking to?");
+		System.out.print("Hello, this is the manager for the Eggs Company. Who am I speaking to?");
 		Scanner newname = new Scanner(System.in);
-		String callername = newname.nextLine();
-		System.out.print("This is the Eggs company. Are you calling about the job offer?");
+		callername = newname.nextLine();
+		System.out.print("Alright, " + callername + ", are you calling about the job offer?");
+		Scanner yesno = new Scanner(System.in);
+		String joboff = yesno.nextLine();
+		if(joboff.equals("yes"))
+		{
+			return "That's great! Talk to me about what job you're interested in, what salary you're looking for, your qualifications, or hours.";
+		}
+		else if(joboff.equals("no"))
+		{
+			emotion--;
+			return "Then is there a problem you'd like to report? Please contact customer service instead. Talk to me about our open positions, salaries, qualifications, or hours if you're interested in a job.";
+		}
+		else
+		{
+			emotion--;
+			return "It's a yes or no question. You can talk to me about our open positions, salaries, qualifications, or hours if you're interested in a job.";
+		}
 	}
 	
 	/**
@@ -73,9 +90,9 @@ public class ChatBot3
 		
 		else if (findKeyword(statement, "get a job") >= 0)
 		{
-			response = "Alright. What is your name?";
+			response = "Alright. What jobs are you interested in, " + callername + "?";
 			emotion++;
-			response = startJobInterview(statement);
+			response = askAboutJobs(statement);
 		}
 
 		// Response transforming I want to statement
@@ -86,7 +103,19 @@ public class ChatBot3
 		else if (findKeyword(statement, "I want a salary of",0) >= 0)
 		{
 			response = transformIWantStatement(statement);
-		}	
+		}
+		else if (findKeyword(statement, "I",0) >= 0 && findKeyword(statement, "you",0) >= 0)
+		{
+			response = transformIYouStatement(statement);
+		}
+		else if (findKeyword(statement, "I can",0) >= 0)
+		{
+			response = qualifications(statement);
+		}
+		else if (findKeyword(statement, "I want to work for ",0) >= 0)
+		{
+			response = hours(statement);
+		}
 		else
 		{
 			response = getRandomResponse();
@@ -171,30 +200,56 @@ public class ChatBot3
 		int psnOfYou = findKeyword (statement, "you", psnOfI);
 		
 		String restOfStatement = statement.substring(psnOfI + 1, psnOfYou).trim();
-		return "Why do you " + restOfStatement + " me?";
+		return "You " + restOfStatement + " me? Well, that's not very professional, " + callername + ", but thank you for that information.";
 	}
 
 	public String salaryResponse(String moneyrequested) {
 		int money = Integer.parseInt(moneyrequested);
 		if (money <= 0) {
+			emotion--;
 			return "Isn't that a bit low?";
 		}
 		else if (money >= 100000) {
+			emotion--;
 			return "Isn't that a bit high?";
 		}
 		else
 		{
+			emotion++;
 			return "That seems somewhat reasonable.";
 		}
 	}
 
-	public String startJobInterview(String name)
+	public String askAboutJobs(String statement)
 	{
-		String namestring = name;
-		return namestring;
+		statement = statement.trim();
+		String lastChar = statement.substring(statement
+				.length() - 1);
+		if (lastChar.equals("."))
+		{
+			statement = statement.substring(0, statement
+					.length() - 1);
+		}
+
+		int psnOfI = findKeyword (statement, "I am interested in being a ", 0);
+
+		String restOfStatement = statement.substring(psnOfI + 27).trim();
+		return "You're " + restOfStatement + "? I'll look into that for you, " + callername + ". If it's your lucky day, those jobs may be open. What else do you want to discuss?";
 	}
 
-	
+	private String hours(String statement)
+	{
+		//  Remove the final period, if there is one
+		statement = statement.trim();
+		String lastChar = statement.substring(statement.length() - 1);
+		if (lastChar.equals("."))
+		{
+			statement = statement.substring(0, statement.length() - 1);
+		}
+		int psn = findKeyword (statement, "I want to work for ", 0);
+		String restOfStatement = statement.substring(psn + 20).trim();
+		return "So, you want to work for " + restOfStatement + " hours? Interesting.";
+	}
 	
 	/**
 	 * Search for one word in phrase. The search is not case
@@ -293,15 +348,16 @@ public class ChatBot3
 		return randomHappyResponses [r.nextInt(randomHappyResponses.length)];
 	}
 	
-	private String [] randomNeutralResponses = {"Interesting, tell me more",
-			"Hmmm.",
-			"Do you really think so?",
-			"You don't say.",
-			"It's all boolean to me.",
-			"So, would you like to go for a walk?",
-			"Could you say that again?"
+	private String [] randomNeutralResponses = {"Interesting, " + callername + ", tell me more.",
+			"Please respond in full sentences, I can't hear you too well so I'll need the context.",
+			"What else do you want to discuss, " + callername + "?",
+			"What do you want a salary of?",
+			"What do you mean by that, " + callername + "?",
+			"What employee do you want to be?",
+			"How many hours do you want to work?",
+			"What can you do?"
 	};
-	private String [] randomAngryResponses = {"Bahumbug.", "Harumph", "The rage consumes me!"};
-	private String [] randomHappyResponses = {"H A P P Y, what's that spell?", "Today is a good day", "You make me feel like a brand new pair of shoes."};
+	private String [] randomAngryResponses = {"You know if you want this job, you'll have to speak in full sentences, right?","Are you kidding me, " + callername + "?", "Please get to the point, I wish to be done.", "I'm going to hang up soon. Ask what you need of me, or get lost."};
+	private String [] randomHappyResponses = {"Please clarify.", "I'm feeling generous. You just might get this job.", "Today is a good day for you, " + callername + ".", "You seem like a pretty good candidate, " + callername + "."};
 	
 }
