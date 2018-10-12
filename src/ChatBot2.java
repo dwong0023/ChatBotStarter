@@ -34,7 +34,7 @@ public class ChatBot2
 		System.out.println (getGreeting());
 
 
-		while (!statement.equals("Bye") && emotion > -2)
+		while (!statement.equals("Bye") && emotion > -3)
 		{
 
 
