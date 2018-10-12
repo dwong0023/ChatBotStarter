@@ -12,6 +12,13 @@ public class ChatBot2
 	//emotion can alter the way our bot responds. Emotion can become more negative or positive over time.
 	int emotion = 0;
 	int progress = 0;
+	/*
+	 PROGRESS 0 = NAME
+     PROGRESS 1 = PROBLEM
+     PROGRESS 2 = CLARIFICATION
+     PROGRESS 3 = SOLUTION
+     PROGRESS 4 = REFLECTION
+    */
 	String problemObject = "";
 	String problemAdjective = "";
 	String problemVerb = "";
@@ -66,7 +73,22 @@ public class ChatBot2
 			response = "I'm sorry, I didn't catch that.";
 		}
 		else if (progress == 0) {
-		    name = statement; progress ++; response = "Hello, " + name + ". How can I help you?";
+		    if (findKeyword(statement,"my name is", 0) >= 0 || findKeyword(statement, "i'm",0) >= 0 || findKeyword(statement, "im", 0) >= 0) {
+                if (statement.contains("my name is") || statement.contains("My name is")) {name = statement.substring(11);}
+                else if (statement.contains("I'm") || statement.contains("i'm")) {name = statement.substring(4);}
+                else if (statement.contains("im") || statement.contains("Im")) {name = statement.substring(3); }
+                progress ++;
+                response = "Hello, " + name + ". How can I help you?";
+            }
+            else if (findKeyword(statement,"no",0) >= 0 && (statement.length() == 2 || statement.length() == 3) ) {
+                emotion --;
+                response = "I need a name.";
+            }
+            else {
+                name = statement;
+                progress ++;
+                response = "Hello, " + name + ". How can I help you?";
+            }
         }
         else if (progress == 1) {
             // if problem or issue is in the statement
@@ -148,9 +170,12 @@ public class ChatBot2
                 problemVerb = statement.substring(statement.indexOf(notter) + notter.length() + 1);
                 if (findKeyword(statement,"my",0) >= 0) {problemObject = statement.substring(findKeyword(statement,"my",0) + 3, statement.indexOf(notter));}
                 else {problemObject = statement.substring(0,statement.indexOf(notter));}
-                response = "I see, so your " + problemObject + " " + problemVerb + ".";
+                response = "I see, so your " + problemObject + " isn't able to " + problemVerb + ".";
                 progress = 3;
             }
+        }
+        else if (progress == 3) {
+
         }
 		// Response transforming I want to statement
 		/*else if (findKeyword(statement, "I want to", 0) >= 0)
