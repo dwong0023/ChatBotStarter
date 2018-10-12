@@ -19,7 +19,7 @@ public class ChatBotRunner
 		ChatBot4 chatbot4 = new ChatBot4();
 
 		Scanner in = new Scanner (System.in);
-		System.out.println("Welcome to the chatbot, nice to meet you.");
+		System.out.println("Welcome to the chatbot, nice to meet you. Please type 1, 2, 3, or 4 for which chat bot you'd like to type to.");
 		String statement = in.nextLine();
 
 
@@ -29,9 +29,22 @@ public class ChatBotRunner
 			//This example has only chatbot1
 
 
-
-			chatbot1.chatLoop(statement);
-
+			if (statement.equals("1")) {
+				chatbot1.chatLoop(statement);
+			}
+			else if (statement.equals("2")) {
+				chatbot2.chatLoop(statement);
+			}
+			else if (statement.equals("3")) {
+			    chatbot3.chatLoop(statement);
+            }
+            else if (statement.equals("4")) {
+                chatbot4.chatLoop(statement);
+            }
+            else {
+                System.out.println("Sorry, I didn't catch anything. Your options are 1, 2, 3, or 4.");
+                in = new Scanner(System.in);
+            }
 
 			statement = in.nextLine();
 
