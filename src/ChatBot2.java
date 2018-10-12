@@ -74,9 +74,16 @@ public class ChatBot2
 		}
 		else if (progress == 0) {
 		    if (findKeyword(statement,"my name is", 0) >= 0 || findKeyword(statement, "i'm",0) >= 0 || findKeyword(statement, "im", 0) >= 0) {
-                if (statement.contains("my name is") || statement.contains("My name is")) {name = statement.substring(11);}
-                else if (statement.contains("I'm") || statement.contains("i'm")) {name = statement.substring(4);}
-                else if (statement.contains("im") || statement.contains("Im")) {name = statement.substring(3); }
+                if (statement.contains("my name is") || statement.contains("My name is")) {
+                    name = statement.substring(findKeyword(statement,"my name is",0) + "my name is".length() + 1);
+                }
+                else if (statement.contains("I'm") || statement.contains("i'm")) {
+                    name = statement.substring(findKeyword(statement,"i'm",0) + "I'm".length() + 1);
+
+                }
+                else if (statement.contains("im") || statement.contains("Im")) {
+                    name = statement.substring(findKeyword(statement, "im", 0) + "im".length() + 1);
+                }
                 progress ++;
                 response = "Hello, " + name + ". How can I help you?";
             }
