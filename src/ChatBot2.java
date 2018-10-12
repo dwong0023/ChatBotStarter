@@ -127,7 +127,7 @@ public class ChatBot2
                 }
             }
             //my x is/are ...
-            else if (statement.contains("is") || statement.contains("are")) {
+            else if (statement.contains(" is ") || statement.contains(" are ")) {
                 String isare = "";
                 if (statement.contains("is")) {
                     isare = "is";
