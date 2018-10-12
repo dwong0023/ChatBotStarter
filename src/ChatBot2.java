@@ -34,7 +34,7 @@ public class ChatBot2
 		System.out.println (getGreeting());
 
 
-		while (!statement.equals("Bye"))
+		while (!statement.equals("Bye") || emotion > -2)
 		{
 
 
@@ -44,7 +44,7 @@ public class ChatBot2
 
 
 		}
-
+        System.out.println("The person you are speaking to hung up.");
 	}
 	/**
 	 * Get a default greeting 	
@@ -372,15 +372,8 @@ public class ChatBot2
 		return randomHappyResponses [r.nextInt(randomHappyResponses.length)];
 	}
 	
-	private String [] randomNeutralResponses = {"Interesting, tell me more",
-			"Hmmm.",
-			"Do you really think so?",
-			"You don't say.",
-			"It's all boolean to me.",
-			"So, would you like to go for a walk?",
-			"Could you say that again?"
-	};
-	private String [] randomAngryResponses = {"Bahumbug.", "Harumph", "The rage consumes me!"};
-	private String [] randomHappyResponses = {"H A P P Y, what's that spell?", "Today is a good day", "You make me feel like a brand new pair of shoes."};
+	private String [] randomNeutralResponses = {"I couldn't catch that.", "I didn't hear you.", "Sorry, could you repeat that?"};
+	private String [] randomAngryResponses = {"Sorry?", "Excuse me?", "What?", "What did you say to me?"};
+	private String [] randomHappyResponses = {"Sorry, I didn't quite catch that.", "Could you please speak a little slower? Take your time.", "I didn't hear you that time."};
 	
 }
