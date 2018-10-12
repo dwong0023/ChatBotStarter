@@ -58,11 +58,11 @@ public class ChatBot2
 	public String getResponse(String statement)
 	{
 		String response = "";
-        if (statement.substring(statement.length() - 1).equals(".")) {
+        if (!statement.isEmpty() && statement.substring(statement.length() - 1).equals(".")) {
             statement = statement.substring(statement.length() - 1);
         }
 		
-		if (statement.length() == 0) {
+		if (statement.isEmpty()) {
 			response = "I'm sorry, I didn't catch that.";
 		}
 		else if (progress == 0) {
@@ -161,7 +161,7 @@ public class ChatBot2
 		{
 			response = transformIWantStatement(statement);
 		}	*/
-		else
+		if (response.isEmpty())
 		{
 			response = getRandomResponse();
 		}
