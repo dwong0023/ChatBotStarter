@@ -23,6 +23,7 @@ public class ChatBot2
 	String problemAdjective = "";
 	String problemVerb = "";
 	String name = "";
+	boolean manualHangUp = false;
 
 	/**
 	 * Runs the conversation for this particular chatbot, should allow switching to other chatbots.
@@ -34,7 +35,7 @@ public class ChatBot2
 		System.out.println (getGreeting());
 
 
-		while (!statement.equals("Bye") && emotion > -3)
+		while (!statement.equals("Bye") && emotion > -3 && manualHangUp == false)
 		{
 
 
@@ -44,7 +45,7 @@ public class ChatBot2
 
 
 		}
-        System.out.println("The person you are speaking to hung up.");
+        System.out.println("[The person you are speaking to hung up]");
 	}
 	/**
 	 * Get a default greeting 	
@@ -171,12 +172,13 @@ public class ChatBot2
                 problemAdjective = statement.substring(findKeyword(statement, isare, 0) + isare.length() + 1);
                 response = "I see, so your " + problemObject + " " + isare + " " + problemAdjective + ".";
             }
-            else if (statement.contains("can't") || statement.contains("cant") || statement.contains("won't") || statement.contains("wont") || statement.contains("not")) {
+            else if (statement.contains("can't") || statement.contains("cant") || statement.contains("won't") || statement.contains("wont") || statement.contains("not") || statement.contains("dont") || statement.contains("don't")) {
                 String notter = "";
-                if (statement.contains("can't") || statement.contains("won't")){notter = "'t";}
+                if (statement.contains("can't") || statement.contains("won't") || statement.contains("don't")){notter = "'t";}
                 else if (statement.contains("not")){notter = "not";}
                 else if (statement.contains("wont")){notter = "wont";}
                 else if (statement.contains("cant")){notter = "cant";}
+                else if (statement.contains("dont")) {notter = "dont";}
                 problemVerb = statement.substring(statement.indexOf(notter) + notter.length() + 1);
                 if (findKeyword(statement,"my",0) >= 0) {problemObject = statement.substring(findKeyword(statement,"my",0) + 3, statement.indexOf(notter));}
                 else {problemObject = statement.substring(0,statement.indexOf(notter));}
@@ -185,7 +187,13 @@ public class ChatBot2
             }
         }
         else if (progress == 3) {
-
+			if (findKeyword(statement,"how") >= 0 || findKeyword(statement, "yes") >= 0) {
+				response = getRandomSolution();
+				if (response.contains("Here's a solution for you.")) manualHangUp = true;
+			}
+			else {
+			    response = "Do you want to hear the solution?";
+            }
         }
 		// Response transforming I want to statement
 		/*else if (findKeyword(statement, "I want to", 0) >= 0)
@@ -374,7 +382,27 @@ public class ChatBot2
 		}	
 		return randomHappyResponses [r.nextInt(randomHappyResponses.length)];
 	}
-	
+
+	private String getRandomSolution() {
+        String[] randomNeutralSolutions = {
+                "It's simple, " + name + ". All you need to do is turn your " + problemObject + " on and off again.",
+                "I can help you with that. Have you tried giving your " + problemObject + " a light slap?",
+                "I would like for you to check if your " + problemObject + " is plugged in, see if that works.",
+                "Maybe your " + problemObject + " has been turned off the whole time?"
+        };
+        String[] randomAngrySolutions = {
+                "Just read the manual.",
+                "Is it really that hard?",
+                "Here's a solution for you."
+        };
+	    Random x = new Random();
+        int y = x.nextInt(randomAngrySolutions.length);
+	    if (emotion >= 0) return randomNeutralSolutions[x.nextInt(randomNeutralSolutions.length)];
+	    else {
+	        return randomAngrySolutions[y];
+        }
+    }
+
 	private String [] randomNeutralResponses = {"I couldn't catch that.", "I didn't hear you.", "Sorry, could you repeat that?"};
 	private String [] randomAngryResponses = {"Sorry?", "Excuse me?", "What?", "What did you say to me?"};
 	private String [] randomHappyResponses = {"Sorry, I didn't quite catch that.", "Could you please speak a little slower? Take your time.", "I didn't hear you that time."};
