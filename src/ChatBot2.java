@@ -172,12 +172,13 @@ public class ChatBot2
                 problemAdjective = statement.substring(findKeyword(statement, isare, 0) + isare.length() + 1);
                 response = "I see, so your " + problemObject + " " + isare + " " + problemAdjective + ".";
             }
-            else if (statement.contains("can't") || statement.contains("cant") || statement.contains("won't") || statement.contains("wont") || statement.contains("not")) {
+            else if (statement.contains("can't") || statement.contains("cant") || statement.contains("won't") || statement.contains("wont") || statement.contains("not") || statement.contains("dont") || statement.contains("don't")) {
                 String notter = "";
-                if (statement.contains("can't") || statement.contains("won't")){notter = "'t";}
+                if (statement.contains("can't") || statement.contains("won't") || statement.contains("don't")){notter = "'t";}
                 else if (statement.contains("not")){notter = "not";}
                 else if (statement.contains("wont")){notter = "wont";}
                 else if (statement.contains("cant")){notter = "cant";}
+                else if (statement.contains("dont")) {notter = "dont";}
                 problemVerb = statement.substring(statement.indexOf(notter) + notter.length() + 1);
                 if (findKeyword(statement,"my",0) >= 0) {problemObject = statement.substring(findKeyword(statement,"my",0) + 3, statement.indexOf(notter));}
                 else {problemObject = statement.substring(0,statement.indexOf(notter));}
