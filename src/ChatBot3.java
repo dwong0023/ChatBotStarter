@@ -11,9 +11,8 @@ import java.util.Scanner;
 public class ChatBot3
 {
 	//emotion can alter the way our bot responds. Emotion can become more negative or positive over time.
-	int emotion = 0;
-	int nocount = 0;
-	String callername;
+	private int emotion = 0;
+	private String callername;
 
 
 	/**
@@ -87,16 +86,26 @@ public class ChatBot3
 			response = "Say something, please.";
 			emotion--;
 		}
-		
 		else if (findKeyword(statement, "get a job") >= 0)
 		{
-			response = "Alright. What jobs are you interested in, " + callername + "?";
-			emotion++;
-			response = askAboutJobs(statement);
+			response = "Alright. What do you want to be, " + callername + "?";
+		}
+		else if (findKeyword(statement, "choose a salary",0) >= 0)
+		{
+			response = "What do you want a salary of, " + callername + "?";
+		}
+		else if (findKeyword(statement, "qualifications",0) >= 0)
+		{
+			response = "What can you do, " + callername + "?";
+		}
+		else if (findKeyword(statement, "choose my hours",0) >= 0)
+		{
+			response = "What can you do, " + callername + "?";
 		}
 
+
 		// Response transforming I want to statement
-		else if (findKeyword(statement, "I want to be the ", 0) >= 0)
+		else if (findKeyword(statement, "I want to be the", 0) >= 0)
 		{
 			response = transformIWantToStatement(statement);
 		}
@@ -112,7 +121,7 @@ public class ChatBot3
 		{
 			response = qualifications(statement);
 		}
-		else if (findKeyword(statement, "I want to work for ",0) >= 0)
+		else if (findKeyword(statement, "I want to work for",0) >= 0)
 		{
 			response = hours(statement);
 		}
@@ -220,23 +229,6 @@ public class ChatBot3
 		}
 	}
 
-	public String askAboutJobs(String statement)
-	{
-		statement = statement.trim();
-		String lastChar = statement.substring(statement
-				.length() - 1);
-		if (lastChar.equals("."))
-		{
-			statement = statement.substring(0, statement
-					.length() - 1);
-		}
-
-		int psnOfI = findKeyword (statement, "I am interested in being a ", 0);
-
-		String restOfStatement = statement.substring(psnOfI + 27).trim();
-		return "You're " + restOfStatement + "? I'll look into that for you, " + callername + ". If it's your lucky day, those jobs may be open. What else do you want to discuss?";
-	}
-
 	private String hours(String statement)
 	{
 		//  Remove the final period, if there is one
@@ -247,8 +239,8 @@ public class ChatBot3
 			statement = statement.substring(0, statement.length() - 1);
 		}
 		int psn = findKeyword (statement, "I want to work for ", 0);
-		String restOfStatement = statement.substring(psn + 20).trim();
-		return "So, you want to work for " + restOfStatement + " hours? Interesting.";
+		String restOfStatement = statement.substring(psn + 19).trim();
+		return "So, you want to work for " + restOfStatement + "? Interesting number of hours.";
 	}
 	
 	/**
@@ -349,7 +341,7 @@ public class ChatBot3
 	}
 	
 	private String [] randomNeutralResponses = {"Interesting, " + callername + ", tell me more.",
-			"Please respond in full sentences, I can't hear you too well so I'll need the context.",
+			"Please respond in full sentences; I can't hear you too well, so I'll need the context.",
 			"What else do you want to discuss, " + callername + "?",
 			"What do you want a salary of?",
 			"What do you mean by that, " + callername + "?",
