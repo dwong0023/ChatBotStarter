@@ -186,10 +186,13 @@ public class ChatBot2
             }
         }
         else if (progress == 3) {
-			if (findKeyword(statement,"how") >= 0) {
+			if (findKeyword(statement,"how") >= 0 || findKeyword(statement, "yes") >= 0) {
 				response = getRandomSolution();
 				if (response.contains("Here's a solution for you.")) manualHangUp = true;
 			}
+			else {
+			    response = "Do you want to hear the solution?";
+            }
         }
 		// Response transforming I want to statement
 		/*else if (findKeyword(statement, "I want to", 0) >= 0)
