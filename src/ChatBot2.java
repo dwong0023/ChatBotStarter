@@ -23,6 +23,7 @@ public class ChatBot2
 	String problemAdjective = "";
 	String problemVerb = "";
 	String name = "";
+	boolean manualHangUp = false;
 
 	/**
 	 * Runs the conversation for this particular chatbot, should allow switching to other chatbots.
@@ -34,7 +35,7 @@ public class ChatBot2
 		System.out.println (getGreeting());
 
 
-		while (!statement.equals("Bye") && emotion > -3)
+		while (!statement.equals("Bye") && emotion > -3 && manualHangUp == false)
 		{
 
 
@@ -44,7 +45,7 @@ public class ChatBot2
 
 
 		}
-        System.out.println("The person you are speaking to hung up.");
+        System.out.println("[The person you are speaking to hung up]");
 	}
 	/**
 	 * Get a default greeting 	
@@ -186,7 +187,8 @@ public class ChatBot2
         }
         else if (progress == 3) {
 			if (findKeyword(statement,"how") >= 0) {
-				response = "I found your solution. All you have to do is turn your " + problemObject + " on and off.";
+				response = getRandomSolution();
+				if (response.contains("Here's a solution for you.")) manualHangUp = true;
 			}
         }
 		// Response transforming I want to statement
@@ -378,19 +380,25 @@ public class ChatBot2
 	}
 
 	private String getRandomSolution() {
+        String[] randomNeutralSolutions = {
+                "It's simple, " + name + ". All you need to do is turn your " + problemObject + " on and off again.",
+                "I can help you with that. Have you tried giving your " + problemObject + " a light slap?",
+                "I would like for you to check if your " + problemObject + " is plugged in, see if that works.",
+                "Maybe your " + problemObject + " has been turned off the whole time?"
+        };
+        String[] randomAngrySolutions = {
+                "Just read the manual.",
+                "Is it really that hard?",
+                "Here's a solution for you."
+        };
 	    Random x = new Random();
+        int y = x.nextInt(randomAngrySolutions.length);
 	    if (emotion >= 0) return randomNeutralSolutions[x.nextInt(randomNeutralSolutions.length)];
-	    else return randomAngrySolutions[x.nextInt(randomAngrySolutions.length)];
+	    else {
+	        return randomAngrySolutions[y];
+        }
     }
-    private String[] randomNeutralSolutions = {
-	        "It's simple. All you need to do is turn your " + problemObject + " on and off again.",
-            "I can help you with that. Have you tried giving your " + problemObject + " a light slap?",
-            "I would like for you to check if your " + problemObject + " is plugged in, see if that works.",
-            "Maybe your " + problemObject + " has been turned off the whole time?"
-	};
-	private String[] randomAngrySolutions = {
-	        ""
-    };
+
 	private String [] randomNeutralResponses = {"I couldn't catch that.", "I didn't hear you.", "Sorry, could you repeat that?"};
 	private String [] randomAngryResponses = {"Sorry?", "Excuse me?", "What?", "What did you say to me?"};
 	private String [] randomHappyResponses = {"Sorry, I didn't quite catch that.", "Could you please speak a little slower? Take your time.", "I didn't hear you that time."};
