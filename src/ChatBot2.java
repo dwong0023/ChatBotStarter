@@ -185,7 +185,9 @@ public class ChatBot2
             }
         }
         else if (progress == 3) {
-
+			if (findKeyword(statement,"how") >= 0) {
+				response = "I found your solution. All you have to do is turn your " + problemObject + " on and off.";
+			}
         }
 		// Response transforming I want to statement
 		/*else if (findKeyword(statement, "I want to", 0) >= 0)
@@ -374,7 +376,21 @@ public class ChatBot2
 		}	
 		return randomHappyResponses [r.nextInt(randomHappyResponses.length)];
 	}
-	
+
+	private String getRandomSolution() {
+	    Random x = new Random();
+	    if (emotion >= 0) return randomNeutralSolutions[x.nextInt(randomNeutralSolutions.length)];
+	    else return randomAngrySolutions[x.nextInt(randomAngrySolutions.length)];
+    }
+    private String[] randomNeutralSolutions = {
+	        "It's simple. All you need to do is turn your " + problemObject + " on and off again.",
+            "I can help you with that. Have you tried giving your " + problemObject + " a light slap?",
+            "I would like for you to check if your " + problemObject + " is plugged in, see if that works.",
+            "Maybe your " + problemObject + " has been turned off the whole time?"
+	};
+	private String[] randomAngrySolutions = {
+	        ""
+    };
 	private String [] randomNeutralResponses = {"I couldn't catch that.", "I didn't hear you.", "Sorry, could you repeat that?"};
 	private String [] randomAngryResponses = {"Sorry?", "Excuse me?", "What?", "What did you say to me?"};
 	private String [] randomHappyResponses = {"Sorry, I didn't quite catch that.", "Could you please speak a little slower? Take your time.", "I didn't hear you that time."};
