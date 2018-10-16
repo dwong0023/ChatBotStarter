@@ -239,7 +239,7 @@ public class ChatBot2
             progress = 5;
         }
         else if (progress == 5 && response.isEmpty()) {
-            if (emotion < 0) {
+            if (emotion < -1.5) {
                 if (findKeyword(statement,"yes") == 0) {
                     response = "You better be.";
                     manualHangUp = true;
