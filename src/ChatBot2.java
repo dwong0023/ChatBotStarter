@@ -167,6 +167,9 @@ public class ChatBot2
                 response = "I see, so your " + problemObject + " " + problemVerb + ".";
                 progress = 3;
             }
+            else if (findKeyword(statement,"help") == 0) {
+                response = "What do you need help with?";
+            }
         }
         else if (progress == 2 && response.isEmpty()) {
             if (statement.contains("is") || statement.contains("are")) {
@@ -185,10 +188,18 @@ public class ChatBot2
                 response = "I see, so your " + problemObject + " " + isare + " " + problemAdjective + ".";
             }
             else if (findKeyword(statement,"my") == 0) {
-                progress = 3;
-                problemVerb = statement.split(" ")[2];
-                problemObject = statement.split(" ")[1];
-                response = "I see, so your " + problemObject + " " + problemVerb + ".";
+
+                if (statement.split(" ").length == 2) {
+                    problemObject = statement.split(" ")[1];
+                    progress = 2;
+                    response = "What about your " + problemObject + "?";
+                }
+                else {
+                    problemObject = statement.split(" ")[1];
+                    problemVerb = statement.split(" ")[2];
+                    response = "I see, so your " + problemObject + " " + problemVerb + ".";
+                    progress = 3;
+                }
             }
             else if (statement.contains("can't") || statement.contains("cant") || statement.contains("won't") || statement.contains("wont") || statement.contains("not") || statement.contains("dont") || statement.contains("don't")) {
                 String notter = "";
@@ -203,7 +214,7 @@ public class ChatBot2
                 response = "I see, so your " + problemObject + " isn't able to " + problemVerb + ".";
                 progress = 3;
             }
-            else if (findKeyword(statement,"it") == 0) {
+            else if (findKeyword(statement,"it") == 0 || findKeyword(statement, "they") == 0) {
                 problemVerb = statement.split(" ")[1];
                 response = "I see, so your " + problemObject + " " + problemVerb + ".";
                 progress = 3;
