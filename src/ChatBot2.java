@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class ChatBot2
 {
 	//emotion can alter the way our bot responds. Emotion can become more negative or positive over time.
-	int emotion = 0;
+	double emotion = 0.0;
 	int progress = 0;
 	/*
 	 PROGRESS 0 = NAME
@@ -272,6 +272,7 @@ public class ChatBot2
 		if (response.isEmpty())
 		{
 			response = getRandomResponse();
+			emotion -= 0.2;
 		}
 		return response;
 	}
