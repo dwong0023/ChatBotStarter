@@ -56,17 +56,20 @@ public class ChatBot3
 		String joboff = yesno.nextLine();
 		if(joboff.equals("yes"))
 		{
-			return "That's great! Talk to me about what job you're interested in, what salary you're looking for, your qualifications, or hours.";
+			System.out.println("That's great! Talk to me about what you want to be, what you want a salary of, your qualifications, or hours you want to work if you're interested in a job.");
+			return "What do you want to discuss?";
 		}
 		else if(joboff.equals("no"))
 		{
 			emotion--;
-			return "Then is there a problem you'd like to report? Please contact customer service instead. Talk to me about our open positions, salaries, qualifications, or hours if you're interested in a job.";
+			System.out.println("Then is there a problem you'd like to report? Please contact customer service instead. Talk to me about what you want to be, what you want a salary of, your qualifications, or hours you want to work if you're interested in a job.");
+			return "What do you want to discuss?";
 		}
 		else
 		{
 			emotion--;
-			return "It's a yes or no question. You can talk to me about our open positions, salaries, qualifications, or hours if you're interested in a job.";
+			System.out.println("It's a yes or no question. You can talk to me about what you want to be, what you want a salary of, your qualifications, or hours you want to work if you're interested in a job.");
+			return "What do you want to discuss?";
 		}
 	}
 	
@@ -80,27 +83,31 @@ public class ChatBot3
 	public String getResponse(String statement)
 	{
 		String response = "";
-		
+
 		if (statement.length() == 0)
 		{
 			response = "Say something, please.";
 			emotion--;
 		}
+		if(statement.length() <= 7)
+		{
+			return "Please respond in full sentences; I can't hear you too well, so I'll need the context.";
+		}
 		else if (findKeyword(statement, "get a job") >= 0)
 		{
 			response = "Alright. What do you want to be, " + callername + "?";
 		}
-		else if (findKeyword(statement, "choose a salary",0) >= 0)
+		else if (findKeyword(statement, "discuss a salary", 0) >= 0)
 		{
 			response = "What do you want a salary of, " + callername + "?";
 		}
-		else if (findKeyword(statement, "qualifications",0) >= 0)
+		else if (findKeyword(statement, "discuss qualifications",0) >= 0)
 		{
 			response = "What can you do, " + callername + "?";
 		}
-		else if (findKeyword(statement, "choose my hours",0) >= 0)
+		else if (findKeyword(statement, "discuss hours",0) >= 0)
 		{
-			response = "What can you do, " + callername + "?";
+			response = "How many hours do you want to work for, " + callername + "?";
 		}
 
 
@@ -152,26 +159,7 @@ public class ChatBot3
 		String restOfStatement = statement.substring(psn + 17).trim();
 		return "Why do you want to be the " + restOfStatement + "?";
 	}
-	
-	/**
-	 * Take a statement with "I want <something>." and transform it into 
-	 * "Would you really be happy if you had <something>?"
-	 * @param statement the user statement, assumed to contain "I want"
-	 * @return the transformed statement
-	 */
-	private String transformIWantStatement(String statement)
-	{
-		//  Remove the final period, if there is one
-		statement = statement.trim();
-		String lastChar = statement.substring(statement.length() - 1);
-		if (lastChar.equals("."))
-		{
-			statement = statement.substring(0, statement.length() - 1);
-		}
-		int psn = findKeyword (statement, "I want a salary of ", 0);
-		String restOfStatement = statement.substring(psn + 19).trim();
-		return "Hm. A salary of $" + restOfStatement + ", you say? " + salaryResponse(restOfStatement);
-	}
+
 
 	private String qualifications(String statement)
 	{
@@ -212,6 +200,26 @@ public class ChatBot3
 		return "You " + restOfStatement + " me? Well, that's not very professional, " + callername + ", but thank you for that information.";
 	}
 
+	/**
+	 * Take a statement with "I want <something>." and transform it into
+	 * "Would you really be happy if you had <something>?"
+	 * @param statement the user statement, assumed to contain "I want"
+	 * @return the transformed statement
+	 */
+	private String transformIWantStatement(String statement)
+	{
+		//  Remove the final period, if there is one
+		statement = statement.trim();
+		String lastChar = statement.substring(statement.length() - 1);
+		if (lastChar.equals("."))
+		{
+			statement = statement.substring(0, statement.length() - 1);
+		}
+		int psn = findKeyword (statement, "I want a salary of ", 0);
+		String restOfStatement = statement.substring(psn + 19).trim();
+		return "Hm. A salary of $" + restOfStatement + ", you say? " + salaryResponse(restOfStatement);
+	}
+
 	public String salaryResponse(String moneyrequested) {
 		int money = Integer.parseInt(moneyrequested);
 		if (money <= 0) {
@@ -239,8 +247,26 @@ public class ChatBot3
 			statement = statement.substring(0, statement.length() - 1);
 		}
 		int psn = findKeyword (statement, "I want to work for ", 0);
-		String restOfStatement = statement.substring(psn + 19).trim();
-		return "So, you want to work for " + restOfStatement + "? Interesting number of hours.";
+		String restOfStatement = statement.substring(psn + 19, statement.length()-6).trim();
+		return "So, you want to work for " + restOfStatement + " hours? " + hourResponse(restOfStatement);
+	}
+
+	public String hourResponse(String hoursrequested) {
+		int desiredhours = Integer.parseInt(hoursrequested);
+		if(desiredhours <= 0)
+		{
+			emotion--;
+			return "You can't work for " + desiredhours + "hours!";
+		}
+		else if(desiredhours >= 5)
+		{
+			emotion++;
+			return "Now, that's a committed worker! I like your drive, " + callername + ".";
+		}
+		else
+		{
+			return "Interesting number of hours.";
+		}
 	}
 	
 	/**
