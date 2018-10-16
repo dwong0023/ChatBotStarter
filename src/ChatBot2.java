@@ -71,7 +71,7 @@ public class ChatBot2
         }
 		
 		if (statement.isEmpty()) {
-			response = "I'm sorry, I didn't catch that.";
+			response = "I'm sorry, I didn't catch that. Did you say anything?";
 		}
 		else if (progress == 0) {
 		    if (findKeyword(statement,"my name is", 0) >= 0 || findKeyword(statement, "i'm",0) >= 0 || findKeyword(statement, "im", 0) >= 0) {
@@ -95,6 +95,9 @@ public class ChatBot2
                 }
                 else response = "I need a name.";
             }
+            else if (findKeyword(statement,"yes") == 0 || findKeyword(statement,"ok") == 0 || findKeyword(statement,"sure") == 0 || findKeyword(statement,"alright") == 0) {
+                response = "Alright, what is it?";
+            }
             else {
                 name = statement;
                 progress ++;
@@ -103,10 +106,8 @@ public class ChatBot2
         }
         else if (progress == 1) {
             // if problem or issue is in the statement
-            if (statement.contains("problem") || statement.contains("issue")) {
-                progress++;
                 // if "problem with" is in the statement
-                if (statement.contains("with")) {
+            if (statement.contains("with")) {
                     // "problem with my" ...
                     if (statement.contains("my")) {
                         problemObject = statement.substring(findKeyword(statement,"my",0) + 3);
@@ -122,11 +123,8 @@ public class ChatBot2
                         response = "What seems to be the problem with " + problemObject + "?";
                         progress = 2;
                     }
-                } else {
-                    response = "What's the issue?";
-                    progress = 2;
-                }
             }
+
             //my x is/are ...
             else if (statement.contains(" is ") || statement.contains(" are ")) {
                 String isare = "";
@@ -142,6 +140,12 @@ public class ChatBot2
                 }
                     problemAdjective = statement.substring(findKeyword(statement, isare, 0) + isare.length() + 1);
                 response = "I see, so your " + problemObject + " " + isare + " " + problemAdjective + ".";
+            }
+            else if (findKeyword(statement,"my") == 0) {
+                progress = 3;
+                problemVerb = statement.split(" ")[2];
+                problemObject = statement.split(" ")[1];
+                response = "I see, so your " + problemObject + " " + problemVerb + ".";
             }
             else if (statement.contains("can't") || statement.contains("cant") || statement.contains("won't") || statement.contains("wont") || statement.contains("not")) {
                 String notter = "";
@@ -172,6 +176,12 @@ public class ChatBot2
                 problemAdjective = statement.substring(findKeyword(statement, isare, 0) + isare.length() + 1);
                 response = "I see, so your " + problemObject + " " + isare + " " + problemAdjective + ".";
             }
+            else if (findKeyword(statement,"my") == 0) {
+                progress = 3;
+                problemVerb = statement.split(" ")[2];
+                problemObject = statement.split(" ")[1];
+                response = "I see, so your " + problemObject + " " + problemVerb + ".";
+            }
             else if (statement.contains("can't") || statement.contains("cant") || statement.contains("won't") || statement.contains("wont") || statement.contains("not") || statement.contains("dont") || statement.contains("don't")) {
                 String notter = "";
                 if (statement.contains("can't") || statement.contains("won't") || statement.contains("don't")){notter = "'t";}
@@ -183,6 +193,11 @@ public class ChatBot2
                 if (findKeyword(statement,"my",0) >= 0) {problemObject = statement.substring(findKeyword(statement,"my",0) + 3, statement.indexOf(notter));}
                 else {problemObject = statement.substring(0,statement.indexOf(notter));}
                 response = "I see, so your " + problemObject + " isn't able to " + problemVerb + ".";
+                progress = 3;
+            }
+            else if (findKeyword(statement,"it") == 0) {
+                problemVerb = statement.split(" ")[1];
+                response = "I see, so your " + problemObject + " " + problemVerb + ".";
                 progress = 3;
             }
         }
@@ -208,7 +223,6 @@ public class ChatBot2
 		{
 			response = getRandomResponse();
 		}
-		
 		return response;
 	}
 	
@@ -397,7 +411,7 @@ public class ChatBot2
         };
 	    Random x = new Random();
         int y = x.nextInt(randomAngrySolutions.length);
-	    if (emotion >= 0) return randomNeutralSolutions[x.nextInt(randomNeutralSolutions.length)];
+	    if (emotion >= -1) return randomNeutralSolutions[x.nextInt(randomNeutralSolutions.length)];
 	    else {
 	        return randomAngrySolutions[y];
         }
