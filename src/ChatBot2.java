@@ -35,7 +35,7 @@ public class ChatBot2
 		System.out.println (getGreeting());
 
 
-		while (!statement.equals("Bye") && emotion > -3 && manualHangUp == false)
+		while (!statement.equals("Bye") && emotion > -3 && !manualHangUp)
 		{
 
 
@@ -73,7 +73,7 @@ public class ChatBot2
 		if (statement.isEmpty()) {
 			response = "I'm sorry, I didn't catch that. Did you say anything?";
 		}
-		else if (progress == 0) {
+		else if (progress == 0 && response.isEmpty()) {
 		    if (findKeyword(statement,"my name is", 0) >= 0 || findKeyword(statement, "i'm",0) >= 0 || findKeyword(statement, "im", 0) >= 0) {
                 if (statement.contains("my name is") || statement.contains("My name is")) {
                     name = statement.substring(findKeyword(statement,"my name is",0) + "my name is".length() + 1);
@@ -104,7 +104,7 @@ public class ChatBot2
                 response = "Hello, " + name + ". How can I help you?";
             }
         }
-        else if (progress == 1) {
+        else if (progress == 1 && response.isEmpty()) {
             // if problem or issue is in the statement
                 // if "problem with" is in the statement
             if (statement.contains("with")) {
@@ -142,10 +142,18 @@ public class ChatBot2
                 response = "I see, so your " + problemObject + " " + isare + " " + problemAdjective + ".";
             }
             else if (findKeyword(statement,"my") == 0) {
-                progress = 3;
-                problemVerb = statement.split(" ")[2];
-                problemObject = statement.split(" ")[1];
-                response = "I see, so your " + problemObject + " " + problemVerb + ".";
+
+                if (statement.split(" ").length == 2) {
+                    problemObject = statement.split(" ")[1];
+                    progress = 2;
+                    response = "What about your " + problemObject + "?";
+                }
+                else {
+                    problemObject = statement.split(" ")[1];
+                    problemVerb = statement.split(" ")[2];
+                    response = "I see, so your " + problemObject + " " + problemVerb + ".";
+                    progress = 3;
+                }
             }
             else if (statement.contains("can't") || statement.contains("cant") || statement.contains("won't") || statement.contains("wont") || statement.contains("not")) {
                 String notter = "";
@@ -160,7 +168,7 @@ public class ChatBot2
                 progress = 3;
             }
         }
-        else if (progress == 2) {
+        else if (progress == 2 && response.isEmpty()) {
             if (statement.contains("is") || statement.contains("are")) {
                 String isare = "";
                 if (statement.contains("is")) {
@@ -201,13 +209,44 @@ public class ChatBot2
                 progress = 3;
             }
         }
-        else if (progress == 3) {
+        else if (progress == 3 && response.isEmpty()) {
 			if (findKeyword(statement,"how") >= 0 || findKeyword(statement, "yes") >= 0) {
 				response = getRandomSolution();
 				if (response.contains("Here's a solution for you.")) manualHangUp = true;
+				progress = 4;
 			}
+			else if (findKeyword(statement, "no") == 0) {
+			    emotion --;
+			    response = "Okay.";
+            }
 			else {
 			    response = "Do you want to hear the solution?";
+            }
+        }
+        else if (progress == 4 && response.isEmpty()) {
+            response = "Are you satisfied with the answer and the Eggs Dee(TM) customer service?";
+            progress = 5;
+        }
+        else if (progress == 5 && response.isEmpty()) {
+            if (emotion < 0) {
+                if (findKeyword(statement,"yes") == 0) {
+                    response = "You better be.";
+                    manualHangUp = true;
+                }
+                if (findKeyword(statement,"no") == 0) {
+                    response = "I'm not satisfied with your cooperation.";
+                    manualHangUp = true;
+                }
+            }
+            else {
+                if (findKeyword(statement,"yes") == 0) {
+                    response = "Great! Thank you for your feedback, and have a good day.";
+                    manualHangUp = true;
+                }
+                if (findKeyword(statement,"no") == 0) {
+                    response = "I hope we can do better in the future. Thank you for calling and have a good day.";
+                    manualHangUp = true;
+                }
             }
         }
 		// Response transforming I want to statement
