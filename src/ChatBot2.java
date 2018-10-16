@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class ChatBot2
 {
 	//emotion can alter the way our bot responds. Emotion can become more negative or positive over time.
-	int emotion = 0;
+	double emotion = 0.0;
 	int progress = 0;
 	/*
 	 PROGRESS 0 = NAME
@@ -35,7 +35,7 @@ public class ChatBot2
 		System.out.println (getGreeting());
 
 
-		while (!statement.equals("Bye") && emotion > -3 && manualHangUp == false)
+		while (!statement.equals("Bye") && emotion > -3 && !manualHangUp)
 		{
 
 
@@ -71,9 +71,9 @@ public class ChatBot2
         }
 		
 		if (statement.isEmpty()) {
-			response = "I'm sorry, I didn't catch that.";
+			response = "I'm sorry, I didn't catch that. Did you say anything?";
 		}
-		else if (progress == 0) {
+		else if (progress == 0 && response.isEmpty()) {
 		    if (findKeyword(statement,"my name is", 0) >= 0 || findKeyword(statement, "i'm",0) >= 0 || findKeyword(statement, "im", 0) >= 0) {
                 if (statement.contains("my name is") || statement.contains("My name is")) {
                     name = statement.substring(findKeyword(statement,"my name is",0) + "my name is".length() + 1);
@@ -95,18 +95,19 @@ public class ChatBot2
                 }
                 else response = "I need a name.";
             }
+            else if (findKeyword(statement,"yes") == 0 || findKeyword(statement,"ok") == 0 || findKeyword(statement,"sure") == 0 || findKeyword(statement,"alright") == 0) {
+                response = "Alright, what is it?";
+            }
             else {
                 name = statement;
                 progress ++;
                 response = "Hello, " + name + ". How can I help you?";
             }
         }
-        else if (progress == 1) {
+        else if (progress == 1 && response.isEmpty()) {
             // if problem or issue is in the statement
-            if (statement.contains("problem") || statement.contains("issue")) {
-                progress++;
                 // if "problem with" is in the statement
-                if (statement.contains("with")) {
+            if (statement.contains("with")) {
                     // "problem with my" ...
                     if (statement.contains("my")) {
                         problemObject = statement.substring(findKeyword(statement,"my",0) + 3);
@@ -122,11 +123,8 @@ public class ChatBot2
                         response = "What seems to be the problem with " + problemObject + "?";
                         progress = 2;
                     }
-                } else {
-                    response = "What's the issue?";
-                    progress = 2;
-                }
             }
+
             //my x is/are ...
             else if (statement.contains(" is ") || statement.contains(" are ")) {
                 String isare = "";
@@ -143,6 +141,20 @@ public class ChatBot2
                     problemAdjective = statement.substring(findKeyword(statement, isare, 0) + isare.length() + 1);
                 response = "I see, so your " + problemObject + " " + isare + " " + problemAdjective + ".";
             }
+            else if (findKeyword(statement,"my") == 0) {
+
+                if (statement.split(" ").length == 2) {
+                    problemObject = statement.split(" ")[1];
+                    progress = 2;
+                    response = "What about your " + problemObject + "?";
+                }
+                else {
+                    problemObject = statement.split(" ")[1];
+                    problemVerb = statement.split(" ")[2];
+                    response = "I see, so your " + problemObject + " " + problemVerb + ".";
+                    progress = 3;
+                }
+            }
             else if (statement.contains("can't") || statement.contains("cant") || statement.contains("won't") || statement.contains("wont") || statement.contains("not")) {
                 String notter = "";
                 if (statement.contains("can't") || statement.contains("won't")){notter = "'t";}
@@ -155,8 +167,11 @@ public class ChatBot2
                 response = "I see, so your " + problemObject + " " + problemVerb + ".";
                 progress = 3;
             }
+            else if (findKeyword(statement,"help") == 0) {
+                response = "What do you need help with?";
+            }
         }
-        else if (progress == 2) {
+        else if (progress == 2 && response.isEmpty()) {
             if (statement.contains("is") || statement.contains("are")) {
                 String isare = "";
                 if (statement.contains("is")) {
@@ -172,6 +187,20 @@ public class ChatBot2
                 problemAdjective = statement.substring(findKeyword(statement, isare, 0) + isare.length() + 1);
                 response = "I see, so your " + problemObject + " " + isare + " " + problemAdjective + ".";
             }
+            else if (findKeyword(statement,"my") == 0) {
+
+                if (statement.split(" ").length == 2) {
+                    problemObject = statement.split(" ")[1];
+                    progress = 2;
+                    response = "What about your " + problemObject + "?";
+                }
+                else {
+                    problemObject = statement.split(" ")[1];
+                    problemVerb = statement.split(" ")[2];
+                    response = "I see, so your " + problemObject + " " + problemVerb + ".";
+                    progress = 3;
+                }
+            }
             else if (statement.contains("can't") || statement.contains("cant") || statement.contains("won't") || statement.contains("wont") || statement.contains("not") || statement.contains("dont") || statement.contains("don't")) {
                 String notter = "";
                 if (statement.contains("can't") || statement.contains("won't") || statement.contains("don't")){notter = "'t";}
@@ -185,14 +214,50 @@ public class ChatBot2
                 response = "I see, so your " + problemObject + " isn't able to " + problemVerb + ".";
                 progress = 3;
             }
+            else if (findKeyword(statement,"it") == 0 || findKeyword(statement, "they") == 0) {
+                problemVerb = statement.split(" ")[1];
+                response = "I see, so your " + problemObject + " " + problemVerb + ".";
+                progress = 3;
+            }
         }
-        else if (progress == 3) {
+        else if (progress == 3 && response.isEmpty()) {
 			if (findKeyword(statement,"how") >= 0 || findKeyword(statement, "yes") >= 0) {
 				response = getRandomSolution();
 				if (response.contains("Here's a solution for you.")) manualHangUp = true;
+				progress = 4;
 			}
+			else if (findKeyword(statement, "no") == 0) {
+			    emotion --;
+			    response = "Okay.";
+            }
 			else {
 			    response = "Do you want to hear the solution?";
+            }
+        }
+        else if (progress == 4 && response.isEmpty()) {
+            response = "Are you satisfied with the answer and the Eggs Dee(TM) customer service?";
+            progress = 5;
+        }
+        else if (progress == 5 && response.isEmpty()) {
+            if (emotion < -1.5) {
+                if (findKeyword(statement,"yes") == 0) {
+                    response = "You better be.";
+                    manualHangUp = true;
+                }
+                if (findKeyword(statement,"no") == 0) {
+                    response = "I'm not satisfied with your cooperation.";
+                    manualHangUp = true;
+                }
+            }
+            else {
+                if (findKeyword(statement,"yes") == 0) {
+                    response = "Great! Thank you for your feedback, and have a good day.";
+                    manualHangUp = true;
+                }
+                if (findKeyword(statement,"no") == 0) {
+                    response = "I hope we can do better in the future. Thank you for calling and have a good day.";
+                    manualHangUp = true;
+                }
             }
         }
 		// Response transforming I want to statement
@@ -207,8 +272,8 @@ public class ChatBot2
 		if (response.isEmpty())
 		{
 			response = getRandomResponse();
+			emotion -= 0.2;
 		}
-		
 		return response;
 	}
 	
@@ -397,7 +462,7 @@ public class ChatBot2
         };
 	    Random x = new Random();
         int y = x.nextInt(randomAngrySolutions.length);
-	    if (emotion >= 0) return randomNeutralSolutions[x.nextInt(randomNeutralSolutions.length)];
+	    if (emotion >= -1) return randomNeutralSolutions[x.nextInt(randomNeutralSolutions.length)];
 	    else {
 	        return randomAngrySolutions[y];
         }
