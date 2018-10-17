@@ -99,9 +99,6 @@ public class ChatBot2
             else if (findKeyword(statement,"yes") == 0 || findKeyword(statement,"ok") >= 0 || findKeyword(statement,"sure") == 0 || findKeyword(statement,"alright") == 0 || findKeyword(statement, "okay") == 0) {
                 response = "Alright, what is it?";
             }
-            else if (findKeyword(statement,"buy") >= 0) {
-                response = "Sorry, customer support can't sell anything. May I recommend you contact the salesperson? Otherwise is there a problem with your product?";
-            }
             else {
                 name = statement;
                 progress ++;
@@ -170,6 +167,9 @@ public class ChatBot2
                 else {problemObject = statement.substring(0,statement.indexOf(notter));}
                 response = "I see, so your " + problemObject + " " + problemVerb + ".";
                 progress = 3;
+            }
+            else if (findKeyword(statement,"buy") >= 0) {
+                response = "Sorry, customer support can't sell anything. May I recommend you contact the salesperson? Otherwise is there a problem with your product?";
             }
             else if (findKeyword(statement,"help") == 0) {
                 response = "What do you need help with?";
