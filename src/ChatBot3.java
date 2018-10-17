@@ -12,7 +12,7 @@ public class ChatBot3
 {
 	//emotion can alter the way our bot responds. Emotion can become more negative or positive over time.
 	private int emotion = 0;
-	private String callername;
+	public String callername;
 
 
 	/**
@@ -54,12 +54,12 @@ public class ChatBot3
 		System.out.print("Alright, " + callername + ", are you calling about the job offer?");
 		Scanner yesno = new Scanner(System.in);
 		String joboff = yesno.nextLine();
-		if(joboff.equals("yes"))
+		if(joboff.indexOf("yes") != -1 || joboff.indexOf("yeah") != -1 || joboff.indexOf("yup") != -1)
 		{
-			System.out.println("That's great! Talk to me about what you want to be, what you want a salary of, your qualifications, or hours you want to work if you're interested in a job.");
+			System.out.println("That's great! Talk to me about what you want to be, what you want a salary of, your qualifications, or hours you want to work.");
 			return "What do you want to discuss?";
 		}
-		else if(joboff.equals("no"))
+		else if(joboff.indexOf("no") != -1 || joboff.indexOf("nope") != -1 || joboff.indexOf("nah") != -1)
 		{
 			emotion--;
 			System.out.println("Then is there a problem you'd like to report? Please contact customer service instead. Talk to me about what you want to be, what you want a salary of, your qualifications, or hours you want to work if you're interested in a job.");
@@ -97,7 +97,11 @@ public class ChatBot3
 		{
 			response = "Alright. What do you want to be, " + callername + "?";
 		}
-		else if (findKeyword(statement, "discuss a salary", 0) >= 0)
+		else if (findKeyword(statement, "I want to work") >= 0)
+		{
+			response = "Alright. What do you want to be, " + callername + "?";
+		}
+		else if (findKeyword(statement, "discuss salary", 0) >= 0)
 		{
 			response = "What do you want a salary of, " + callername + "?";
 		}
@@ -197,6 +201,18 @@ public class ChatBot3
 		int psnOfYou = findKeyword (statement, "you", psnOfI);
 		
 		String restOfStatement = statement.substring(psnOfI + 1, psnOfYou).trim();
+		if(restOfStatement.equals("love")||restOfStatement.equals("like")||restOfStatement.equals("adore"))
+		{
+			emotion++;
+		}
+		else if(restOfStatement.equals("hate")||restOfStatement.equals("dislike")||restOfStatement.equals("loathe"))
+		{
+			emotion--;
+		}
+		else
+		{
+			emotion += 0;
+		}
 		return "You " + restOfStatement + " me? Well, that's not very professional, " + callername + ", but thank you for that information.";
 	}
 
@@ -217,23 +233,36 @@ public class ChatBot3
 		}
 		int psn = findKeyword (statement, "I want a salary of ", 0);
 		String restOfStatement = statement.substring(psn + 19).trim();
+
+
+		String firstChar = restOfStatement.substring(0,1);
+		if (firstChar.equals("$"))
+		{
+			restOfStatement = restOfStatement.substring(1);
+		}
+
+
 		return "Hm. A salary of $" + restOfStatement + ", you say? " + salaryResponse(restOfStatement);
 	}
 
 	public String salaryResponse(String moneyrequested) {
-		int money = Integer.parseInt(moneyrequested);
-		if (money <= 0) {
-			emotion--;
-			return "Isn't that a bit low?";
+		try {
+			int money = Integer.parseInt(moneyrequested);
+			if (money <= 0) {
+				emotion--;
+				return "Isn't that a bit low?";
+			} else if (money >= 100000) {
+				emotion--;
+				return "Isn't that a bit high?";
+			} else {
+				emotion++;
+				return "That seems somewhat reasonable.";
+			}
 		}
-		else if (money >= 100000) {
-			emotion--;
-			return "Isn't that a bit high?";
-		}
-		else
+		catch(NumberFormatException ex)
 		{
-			emotion++;
-			return "That seems somewhat reasonable.";
+			emotion--;
+			return "That's not completely a number.";
 		}
 	}
 
@@ -365,17 +394,17 @@ public class ChatBot3
 		}	
 		return randomHappyResponses [r.nextInt(randomHappyResponses.length)];
 	}
-	
-	private String [] randomNeutralResponses = {"Interesting, " + callername + ", tell me more.",
+
+	private String [] randomNeutralResponses = {
 			"Please respond in full sentences; I can't hear you too well, so I'll need the context.",
-			"What else do you want to discuss, " + callername + "?",
+			"What else do you want to discuss?",
 			"What do you want a salary of?",
-			"What do you mean by that, " + callername + "?",
+			"What do you mean by that?",
 			"What employee do you want to be?",
 			"How many hours do you want to work?",
 			"What can you do?"
 	};
-	private String [] randomAngryResponses = {"You know if you want this job, you'll have to speak in full sentences, right?","Are you kidding me, " + callername + "?", "Please get to the point, I wish to be done.", "I'm going to hang up soon. Ask what you need of me, or get lost."};
-	private String [] randomHappyResponses = {"Please clarify.", "I'm feeling generous. You just might get this job.", "Today is a good day for you, " + callername + ".", "You seem like a pretty good candidate, " + callername + "."};
-	
+	private String [] randomAngryResponses = {"You know if you want this job, you'll have to speak in full sentences, right?","Are you kidding me?", "Please get to the point, I wish to be done.", "I'm going to hang up soon. Ask what you need of me, or get lost."};
+	private String [] randomHappyResponses = {"Please clarify.", "I'm feeling generous. You just might get this job.", "Today is a good day for you.", "You seem like a pretty good candidate."};
+
 }
