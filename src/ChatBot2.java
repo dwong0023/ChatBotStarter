@@ -235,7 +235,7 @@ public class ChatBot2
             }
         }
         else if (progress == 4 && response.isEmpty()) {
-            response = "Are you satisfied with the answer and the Eggs Dee(TM) customer service?";
+            response = "Are you satisfied with the answer and the Eggs Dee™ customer service?";
             progress = 5;
         }
         else if (progress == 5 && response.isEmpty()) {
