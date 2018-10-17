@@ -20,10 +20,10 @@ public class ChatBotRunner
 
 		Scanner in = new Scanner (System.in);
 		System.out.println("Welcome to the Chatbot representing Eggs Dee™, an egg company.");
-		System.out.println("Please type 1 for a salesperson (by Zeng Chen,");
-		System.out.println("2 for customer support (by Jesse Han,");
+		System.out.println("Please type 1 for a salesperson (by Zeng Chen),");
+		System.out.println("2 for customer support (by Jesse Han),");
 		System.out.println("3 for the manager if you want a job (by Daniyah Wong),");
-		System.out.println("or 4 for the health inspector (by Parker Ahmed.");
+		System.out.println("or 4 for the health inspector (by Parker Ahmed).");
 		String statement = in.nextLine();
 
 
