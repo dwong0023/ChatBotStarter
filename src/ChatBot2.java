@@ -91,7 +91,7 @@ public class ChatBot2
             }
             else if (findKeyword(statement,"no",0) >= 0 && (statement.length() == 2 || statement.length() == 3) ) {
                 emotion --;
-                if (emotion < -2) {
+                if (emotion <= -3) {
                     response = "";
                 }
                 else response = "I need a name.";
