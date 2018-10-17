@@ -96,7 +96,7 @@ public class ChatBot2
                 }
                 else response = "I need a name.";
             }
-            else if (findKeyword(statement,"yes") == 0 || findKeyword(statement,"ok") == 0 || findKeyword(statement,"sure") == 0 || findKeyword(statement,"alright") == 0) {
+            else if (findKeyword(statement,"yes") == 0 || findKeyword(statement,"ok") >= 0 || findKeyword(statement,"sure") == 0 || findKeyword(statement,"alright") == 0 || findKeyword(statement, "okay") == 0) {
                 response = "Alright, what is it?";
             }
             else {
