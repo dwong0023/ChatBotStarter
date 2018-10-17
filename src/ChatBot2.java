@@ -99,6 +99,9 @@ public class ChatBot2
             else if (findKeyword(statement,"yes") == 0 || findKeyword(statement,"ok") >= 0 || findKeyword(statement,"sure") == 0 || findKeyword(statement,"alright") == 0 || findKeyword(statement, "okay") == 0) {
                 response = "Alright, what is it?";
             }
+            else if (findKeyword(statement,"buy") >= 0) {
+                response = "Sorry, customer support can't sell anything. May I recommend you contact the salesperson? Otherwise is there a problem with your product?";
+            }
             else {
                 name = statement;
                 progress ++;
