@@ -19,7 +19,11 @@ public class ChatBotRunner
 		ChatBot4 chatbot4 = new ChatBot4();
 
 		Scanner in = new Scanner (System.in);
-		System.out.println("Welcome to the chatbot, nice to meet you. Please type 1, 2, 3, or 4 for which chat bot you'd like to type to.");
+		System.out.println("Welcome to the Chatbot representing Eggs Dee™, an egg company.");
+		System.out.println("Please type 1 for a salesperson (by Zeng Chen),");
+		System.out.println("2 for customer support (by Jesse Han),");
+		System.out.println("3 for the manager if you want a job (by Daniyah Wong),");
+		System.out.println("or 4 for the health inspector (by Parker Ahmed).");
 		String statement = in.nextLine();
 
 

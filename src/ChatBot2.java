@@ -53,7 +53,8 @@ public class ChatBot2
 	 */	
 	public String getGreeting()
 	{
-		return "Thank you for calling Eggs Dee™ customer support service. Can I get your name?";
+		if (manualHangUp || emotion <= -3) return "";
+		else return "Thank you for calling Eggs Dee™ customer support service. Can I get your name?";
 	}
 	
 	/**
@@ -90,12 +91,12 @@ public class ChatBot2
             }
             else if (findKeyword(statement,"no",0) >= 0 && (statement.length() == 2 || statement.length() == 3) ) {
                 emotion --;
-                if (emotion < -2) {
+                if (emotion <= -3) {
                     response = "";
                 }
                 else response = "I need a name.";
             }
-            else if (findKeyword(statement,"yes") == 0 || findKeyword(statement,"ok") == 0 || findKeyword(statement,"sure") == 0 || findKeyword(statement,"alright") == 0) {
+            else if (findKeyword(statement,"yes") == 0 || findKeyword(statement,"ok") >= 0 || findKeyword(statement,"sure") == 0 || findKeyword(statement,"alright") == 0 || findKeyword(statement, "okay") == 0) {
                 response = "Alright, what is it?";
             }
             else {
@@ -167,6 +168,9 @@ public class ChatBot2
                 response = "I see, so your " + problemObject + " " + problemVerb + ".";
                 progress = 3;
             }
+            else if (findKeyword(statement,"buy") >= 0) {
+                response = "Sorry, customer support can't sell anything. May I recommend you contact the salesperson? Otherwise how can I help you with our products?";
+            }
             else if (findKeyword(statement,"help") == 0) {
                 response = "What do you need help with?";
             }
@@ -235,7 +239,7 @@ public class ChatBot2
             }
         }
         else if (progress == 4 && response.isEmpty()) {
-            response = "Are you satisfied with the answer and the Eggs Dee(TM) customer service?";
+            response = "Are you satisfied with the answer and the Eggs Dee™ customer service?";
             progress = 5;
         }
         else if (progress == 5 && response.isEmpty()) {
