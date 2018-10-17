@@ -53,7 +53,8 @@ public class ChatBot2
 	 */	
 	public String getGreeting()
 	{
-		return "Thank you for calling Eggs Dee™ customer support service. Can I get your name?";
+		if (manualHangUp || emotion <= -3) return "";
+		else return "Thank you for calling Eggs Dee™ customer support service. Can I get your name?";
 	}
 	
 	/**
