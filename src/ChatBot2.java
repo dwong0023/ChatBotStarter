@@ -169,7 +169,7 @@ public class ChatBot2
                 progress = 3;
             }
             else if (findKeyword(statement,"buy") >= 0) {
-                response = "Sorry, customer support can't sell anything. May I recommend you contact the salesperson? Otherwise is there a problem with your product?";
+                response = "Sorry, customer support can't sell anything. May I recommend you contact the salesperson? Otherwise how can I help you with our products?";
             }
             else if (findKeyword(statement,"help") == 0) {
                 response = "What do you need help with?";
