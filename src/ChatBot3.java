@@ -161,7 +161,7 @@ public class ChatBot3
 		}
 		int psn = findKeyword (statement, "I want to be the", 0);
 		String restOfStatement = statement.substring(psn + 17).trim();
-		return "So, you want to be the " + restOfStatement + "? I'll check if any of those positions are open.";
+		return "So, you want to be the" + restOfStatement + "? I'll check if any of those positions are open.";
 	}
 
 
