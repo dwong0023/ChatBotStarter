@@ -230,7 +230,7 @@ public class ChatBot2
                     progress = 3;
                 }
             }
-            else if (findKeyword(statement,"it") == 0 || findKeyword(statement, "they") == 0) {
+            else if (findKeyword(statement,"it") >= 0 || findKeyword(statement, "they") >= 0) {
                 problemVerb = statement.split(" ")[1];
                 response = "I see, so your " + problemObject + " " + problemVerb + ".";
                 progress = 3;
@@ -245,6 +245,7 @@ public class ChatBot2
 			else if (findKeyword(statement, "no") == 0) {
 			    emotion --;
 			    response = "Okay.";
+			    progress = 4;
             }
 			else {
 			    response = "Do you want to hear the solution?";
