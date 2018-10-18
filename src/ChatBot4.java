@@ -58,19 +58,41 @@ public class ChatBot4
 
         if (statement.length() == 0)
         {
-            response = "Say something, please.";
+            response = "You best respond to me.";
         }
 
         else if (findKeyword(statement, "no") >= 0)
         {
-            response = "Why so negative?";
+            response = "Why you gotta be so rude?";
             emotion--;
         }
 
-        else if (findKeyword(statement, "levin") >= 0)
+        else if (findKeyword(statement, "bugs") >= 0)
         {
-            response = "More like LevinTheDream amiright?";
+            response = "I can assure you that there are no insects in this facility.";
             emotion++;
+        }
+
+        else if (findKeyword(statement, "grade") >= 0)
+        {
+            response = "This facility recieved an A for their grade.";
+            emotion++;
+        }
+
+        else if (findKeyword(statement, "gay") >= 0)
+        {
+            response = "That's a derogatory term.";
+            emotion--;
+        }
+
+        else if (findKeyword(statement, "job") >= 0)
+        {
+            response = "Please speak to the manager about that.";
+        }
+
+        else if (findKeyword(statement, "terrible") >= 0)
+        {
+            response = "If you have a complaint please contact customer support.";
         }
 
         // Response transforming I want to statement
@@ -262,14 +284,14 @@ public class ChatBot4
     }
 
     private String [] randomNeutralResponses = {"Interesting, tell me more",
-            "Hmmm.",
-            "Do you really think so?",
-            "You don't say.",
-            "It's all boolean to me.",
-            "So, would you like to go for a walk?",
-            "Could you say that again?"
+            "Interesting",
+            "I can't believe it!",
+            "Tocuche.",
+            "The weather is nice today.",
+            "How about that airplane food?",
+            "What was that?"
     };
-    private String [] randomAngryResponses = {"Bahumbug.", "Harumph", "The rage consumes me!"};
-    private String [] randomHappyResponses = {"H A P P Y, what's that spell?", "Today is a good day", "You make me feel like a brand new pair of shoes."};
+    private String [] randomAngryResponses = {"You pest!", "How dare you!", "Why you little!"};
+    private String [] randomHappyResponses = {"Awwwwww.", "Hooray!", "I'm happy to hear that."};
 
 }
