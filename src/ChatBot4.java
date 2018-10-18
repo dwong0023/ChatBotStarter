@@ -73,6 +73,28 @@ public class ChatBot4
             emotion++;
         }
 
+        else if (findKeyword(statement, "grade") >= 0)
+        {
+            response = "This facility recieved an A for their grade.";
+            emotion++;
+        }
+
+        else if (findKeyword(statement, "gay") >= 0)
+        {
+            response = "That's a derogatory term.";
+            emotion--;
+        }
+
+        else if (findKeyword(statement, "job") >= 0)
+        {
+            response = "Please speak to the manager about that.";
+        }
+
+        else if (findKeyword(statement, "terrible") >= 0)
+        {
+            response = "If you have a complaint please contact customer support.";
+        }
+
         // Response transforming I want to statement
         else if (findKeyword(statement, "I want to", 0) >= 0)
         {
