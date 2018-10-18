@@ -159,9 +159,9 @@ public class ChatBot3
 		{
 			statement = statement.substring(0, statement.length() - 1);
 		}
-		int psn = findKeyword (statement, "I want to be the ", 0);
+		int psn = findKeyword (statement, "I want to be the", 0);
 		String restOfStatement = statement.substring(psn + 17).trim();
-		return "Why do you want to be the " + restOfStatement + "?";
+		return "So, you want to be the " + restOfStatement + "? I'll check if any of those positions are open.";
 	}
 
 
@@ -396,7 +396,6 @@ public class ChatBot3
 	}
 
 	private String [] randomNeutralResponses = {
-			"Please respond in full sentences; I can't hear you too well, so I'll need the context.",
 			"What else do you want to discuss?",
 			"What do you want a salary of?",
 			"What do you mean by that?",
