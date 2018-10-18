@@ -142,32 +142,38 @@ public class ChatBot2
                     problemAdjective = statement.substring(findKeyword(statement, isare, 0) + isare.length() + 1);
                 response = "I see, so your " + problemObject + " " + isare + " " + problemAdjective + ".";
             }
-            else if (findKeyword(statement,"my") == 0) {
+			/* RETIRED
+			else if (statement.contains("can't") || statement.contains("cant") || statement.contains("won't") || statement.contains("wont") || statement.contains("not")) {
+				String notter = "";
+				if (statement.contains("can't") || statement.contains("won't")){notter = "'t";}
+				else if (statement.contains("not")){notter = "not";}
+				else if (statement.contains("wont")){notter = "wont";}
+				else if (statement.contains("cant")){notter = "cant";}
+				problemVerb = statement.substring(statement.indexOf(notter) + notter.length() + 1);
+				if (findKeyword(statement,"my",0) >= 0) {problemObject = statement.substring(findKeyword(statement,"my",0) + 3, statement.indexOf(notter));}
+				else {problemObject = statement.substring(0,statement.indexOf(notter));}
+				response = "I see, so your " + problemObject + " " + problemVerb + ".";
+				progress = 3;
+			}*/
+			else if (findKeyword(statement,"my") == 0) {
 
-                if (statement.split(" ").length == 2) {
-                    problemObject = statement.split(" ")[1];
-                    progress = 2;
-                    response = "What about your " + problemObject + "?";
-                }
-                else {
-                    problemObject = statement.split(" ")[1];
-                    problemVerb = statement.split(" ")[2];
-                    response = "I see, so your " + problemObject + " " + problemVerb + ".";
-                    progress = 3;
-                }
-            }
-            else if (statement.contains("can't") || statement.contains("cant") || statement.contains("won't") || statement.contains("wont") || statement.contains("not")) {
-                String notter = "";
-                if (statement.contains("can't") || statement.contains("won't")){notter = "'t";}
-                else if (statement.contains("not")){notter = "not";}
-                else if (statement.contains("wont")){notter = "wont";}
-                else if (statement.contains("cant")){notter = "cant";}
-                problemVerb = statement.substring(statement.indexOf(notter) + notter.length() + 1);
-                if (findKeyword(statement,"my",0) >= 0) {problemObject = statement.substring(findKeyword(statement,"my",0) + 3, statement.indexOf(notter));}
-                else {problemObject = statement.substring(0,statement.indexOf(notter));}
-                response = "I see, so your " + problemObject + " " + problemVerb + ".";
-                progress = 3;
-            }
+				if (statement.split(" ").length == 2) {
+					problemObject = statement.split(" ")[1];
+					progress = 3;
+					response = "What about your " + problemObject + "?";
+				}
+				else {
+					problemObject = statement.split(" ")[1];
+					for (int i = 0; i < statement.split(" ").length - 2; i ++) {
+						problemVerb += statement.split(" ")[2 + i];
+						if (i < statement.split(" ").length - 3) {
+							problemVerb += " ";
+						}
+					}
+					response = "I see, so your " + problemObject + " " + problemVerb + ".";
+					progress = 3;
+				}
+			}
             else if (findKeyword(statement,"buy") >= 0) {
                 response = "Sorry, customer support can't sell anything. May I recommend you contact the salesperson? Otherwise how can I help you with our products?";
             }
@@ -191,32 +197,38 @@ public class ChatBot2
                 problemAdjective = statement.substring(findKeyword(statement, isare, 0) + isare.length() + 1);
                 response = "I see, so your " + problemObject + " " + isare + " " + problemAdjective + ".";
             }
+			/* RETIRED
+			else if (statement.contains("can't") || statement.contains("cant") || statement.contains("won't") || statement.contains("wont") || statement.contains("not") || statement.contains("dont") || statement.contains("don't")) {
+				String notter = "";
+				if (statement.contains("can't") || statement.contains("won't")){notter = "'t";}
+				else if (statement.contains("not")){notter = "not";}
+				else if (statement.contains("wont")){notter = "wont";}
+				else if (statement.contains("cant")){notter = "cant";}
+				problemVerb = statement.substring(statement.indexOf(notter) + notter.length() + 1);
+				if (findKeyword(statement,"my",0) >= 0) {problemObject = statement.substring(findKeyword(statement,"my",0) + 3, statement.indexOf(notter));}
+				else {problemObject = statement.substring(0,statement.indexOf(notter));}
+				response = "I see, so your " + problemObject + " " + problemVerb + ".";
+				progress = 3;
+			}
+			*/
             else if (findKeyword(statement,"my") == 0) {
 
                 if (statement.split(" ").length == 2) {
                     problemObject = statement.split(" ")[1];
-                    progress = 2;
+                    progress = 3;
                     response = "What about your " + problemObject + "?";
                 }
                 else {
                     problemObject = statement.split(" ")[1];
-                    problemVerb = statement.split(" ")[2];
+                    for (int i = 0; i < statement.split(" ").length - 2; i ++) {
+						problemVerb += statement.split(" ")[2 + i];
+						if (i < statement.split(" ").length - 3) {
+							problemVerb += " ";
+						}
+					}
                     response = "I see, so your " + problemObject + " " + problemVerb + ".";
                     progress = 3;
                 }
-            }
-            else if (statement.contains("can't") || statement.contains("cant") || statement.contains("won't") || statement.contains("wont") || statement.contains("not") || statement.contains("dont") || statement.contains("don't")) {
-                String notter = "";
-                if (statement.contains("can't") || statement.contains("won't") || statement.contains("don't")){notter = "'t";}
-                else if (statement.contains("not")){notter = "not";}
-                else if (statement.contains("wont")){notter = "wont";}
-                else if (statement.contains("cant")){notter = "cant";}
-                else if (statement.contains("dont")) {notter = "dont";}
-                problemVerb = statement.substring(statement.indexOf(notter) + notter.length() + 1);
-                if (findKeyword(statement,"my",0) >= 0) {problemObject = statement.substring(findKeyword(statement,"my",0) + 3, statement.indexOf(notter));}
-                else {problemObject = statement.substring(0,statement.indexOf(notter));}
-                response = "I see, so your " + problemObject + " isn't able to " + problemVerb + ".";
-                progress = 3;
             }
             else if (findKeyword(statement,"it") == 0 || findKeyword(statement, "they") == 0) {
                 problemVerb = statement.split(" ")[1];
