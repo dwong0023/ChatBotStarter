@@ -8,7 +8,8 @@ import java.util.Random;
 import java.util.Scanner;
 
 /*
-Zeng Chen
+Zeng
+Sales bot: sell eggs
 */
 
 /**
@@ -285,23 +286,23 @@ public class ChatBot1
 			if(findKeyword(statement,"quality") >= 0)
 			{
 				response = quality();
+				//calls qulaity method to ell about quality of eggs
 			}
 			else if(findKeyword(statement,"eggs") >= 0 || findKeyword(statement,"egg") >= 0)
 			{
 				response = moreInfo1(statement);
+				//match keyword "eggs" to call for moreinfo method
 			}
 			else
 			{
 				response = "Tell you about what? I can only provide information regarding eggs.";
+				//failsafe
 			}
-		}
-		else if (findKeyword(statement, "no") >= 0)
-		{
-			response = "Why so negative?";
 		}
 		else
 		{
 			response = "I don't understand that command, please try again.";
+			// Default response
 		}
 
 		return response;
@@ -383,11 +384,4 @@ public class ChatBot1
 	{
 		return findKeyword (statement, goal, 0);
 	}
-
-
-
-	/**
-	 * Pick a default response to use if nothing else fits.
-	 * @return a non-committal string
-	 */
 }
