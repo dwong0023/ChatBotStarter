@@ -18,6 +18,8 @@ public class ChatBot2
      PROGRESS 2 = CLARIFICATION
      PROGRESS 3 = SOLUTION
      PROGRESS 4 = REFLECTION
+     PROGRESS 5 = FEEDBACK
+     PROGRESS 6 = BRANCH FROM 1; REDIRECTION
     */
 	String problemObject = "";
 	String problemAdjective = "";
@@ -142,6 +144,11 @@ public class ChatBot2
                     problemAdjective = statement.substring(findKeyword(statement, isare, 0) + isare.length() + 1);
                 response = "I see, so your " + problemObject + " " + isare + " " + problemAdjective + ".";
             }
+            else if ((statement.contains("dont need") || statement.contains("don't need")) && statement.contains("help")) { //detects "i don(')t need (any) help"
+            	emotion --;
+            	progress = 6;
+            	response = "Okay. Would you like me to direct you to a representative from another department?";
+			}
 			else if (findKeyword(statement,"my") == 0) {
 
 				if (statement.split(" ").length == 2) {
@@ -251,6 +258,17 @@ public class ChatBot2
                 }
             }
         }
+        else if (progress == 6 && response.isEmpty()) {
+        	if (findKeyword(statement,"yes") >= 0 || findKeyword(statement,"ok") >= 0 || findKeyword(statement,"sure") == 0 || findKeyword(statement,"alright") == 0 || findKeyword(statement, "okay") == 0 || findKeyword(statement, "yeah") == 0) {
+        		manualHangUp = true;
+        		response = "Please hold.";
+			}
+			else {
+				progress = 1;
+				emotion -= 0.5;
+				response = "Okay, how can I help you then?";
+			}
+		}
 		// Response transforming I want to statement
 		/*else if (findKeyword(statement, "I want to", 0) >= 0)
 		{
