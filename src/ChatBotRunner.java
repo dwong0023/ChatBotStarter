@@ -13,7 +13,7 @@ public class ChatBotRunner
 	 */
 	public static void main(String[] args)
 	{
-		ChatBot1 chatbot1 = new ChatBot1();
+		//ChatBot1 chatbot1 = new ChatBot1();
 		ChatBot2 chatbot2 = new ChatBot2();
 		ChatBot3 chatbot3 = new ChatBot3();
 		ChatBot4 chatbot4 = new ChatBot4();
@@ -33,17 +33,22 @@ public class ChatBotRunner
 			//This example has only chatbot1
 
 
-			if (statement.equals("1")) {
+			/*if (statement.equals("1")) {
 				chatbot1.chatLoop(statement);
-			}
-			else if (statement.equals("2")) {
+				exitResponse();
+			}*/
+			//else
+			if (statement.equals("2")) {
 				chatbot2.chatLoop(statement);
+				exitResponse();
 			}
 			else if (statement.equals("3")) {
 			    chatbot3.chatLoop(statement);
+				exitResponse();
             }
             else if (statement.equals("4")) {
                 chatbot4.chatLoop(statement);
+				exitResponse();
             }
             else {
                 System.out.println("Sorry, I didn't catch anything. Your options are 1, 2, 3, or 4.");
@@ -54,6 +59,13 @@ public class ChatBotRunner
 
 
 		}
+	}
+	public static void exitResponse() {
+		System.out.println("Welcome back, you are speaking to the runner bot. Who would you like to talk to?");
+		System.out.println("Please type 1 for a salesperson (by Zeng Chen),");
+		System.out.println("2 for customer support (by Jesse Han),");
+		System.out.println("3 for the manager if you want a job (by Daniyah Wong),");
+		System.out.println("or 4 for the health inspector (by Parker Ahmed).");
 	}
 
 }

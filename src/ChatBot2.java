@@ -18,6 +18,8 @@ public class ChatBot2
      PROGRESS 2 = CLARIFICATION
      PROGRESS 3 = SOLUTION
      PROGRESS 4 = REFLECTION
+     PROGRESS 5 = FEEDBACK
+     PROGRESS 6 = BRANCH FROM 1; REDIRECTION
     */
 	String problemObject = "";
 	String problemAdjective = "";
@@ -74,7 +76,7 @@ public class ChatBot2
 		if (statement.isEmpty()) {
 			response = "I'm sorry, I didn't catch that. Did you say anything?";
 		}
-		else if (progress == 0 && response.isEmpty()) {
+		else if (progress == 0 && response.isEmpty()) { // accounts for different ways for introducing your name
 		    if (findKeyword(statement,"my name is", 0) >= 0 || findKeyword(statement, "i'm",0) >= 0 || findKeyword(statement, "im", 0) >= 0) {
                 if (statement.contains("my name is") || statement.contains("My name is")) {
                     name = statement.substring(findKeyword(statement,"my name is",0) + "my name is".length() + 1);
@@ -94,12 +96,12 @@ public class ChatBot2
                 if (emotion <= -3) {
                     response = "";
                 }
-                else response = "I need a name.";
+                else response = "I need a name."; // you can't deny the bot a name
             }
-            else if (findKeyword(statement,"yes") == 0 || findKeyword(statement,"ok") >= 0 || findKeyword(statement,"sure") == 0 || findKeyword(statement,"alright") == 0 || findKeyword(statement, "okay") == 0) {
+            else if (findKeyword(statement,"yes") >= 0 || findKeyword(statement,"ok") >= 0 || findKeyword(statement,"sure") == 0 || findKeyword(statement,"alright") == 0 || findKeyword(statement, "okay") == 0 || findKeyword(statement, "yeah") == 0) {
                 response = "Alright, what is it?";
             }
-            else {
+            else { // and if you just say your name, it still works
                 name = statement;
                 progress ++;
                 response = "Hello, " + name + ". How can I help you?";
@@ -127,7 +129,7 @@ public class ChatBot2
             }
 
             //my x is/are ...
-            else if (statement.contains(" is ") || statement.contains(" are ")) {
+            else if (statement.contains(" is ") || statement.contains(" are ")) { // some of these statements are the same as the other ones above, to account for if the user says the full problem first
                 String isare = "";
                 if (statement.contains("is")) {
                     isare = "is";
@@ -142,19 +144,11 @@ public class ChatBot2
                     problemAdjective = statement.substring(findKeyword(statement, isare, 0) + isare.length() + 1);
                 response = "I see, so your " + problemObject + " " + isare + " " + problemAdjective + ".";
             }
-			/* RETIRED
-			else if (statement.contains("can't") || statement.contains("cant") || statement.contains("won't") || statement.contains("wont") || statement.contains("not")) {
-				String notter = "";
-				if (statement.contains("can't") || statement.contains("won't")){notter = "'t";}
-				else if (statement.contains("not")){notter = "not";}
-				else if (statement.contains("wont")){notter = "wont";}
-				else if (statement.contains("cant")){notter = "cant";}
-				problemVerb = statement.substring(statement.indexOf(notter) + notter.length() + 1);
-				if (findKeyword(statement,"my",0) >= 0) {problemObject = statement.substring(findKeyword(statement,"my",0) + 3, statement.indexOf(notter));}
-				else {problemObject = statement.substring(0,statement.indexOf(notter));}
-				response = "I see, so your " + problemObject + " " + problemVerb + ".";
-				progress = 3;
-			}*/
+            else if ((statement.contains("dont need") || statement.contains("don't need")) && statement.contains("help")) { //detects "i don(')t need (any) help"
+            	emotion --;
+            	progress = 6;
+            	response = "Okay. Would you like me to direct you to a representative from another department?";
+			}
 			else if (findKeyword(statement,"my") == 0) {
 
 				if (statement.split(" ").length == 2) {
@@ -181,7 +175,7 @@ public class ChatBot2
                 response = "What do you need help with?";
             }
         }
-        else if (progress == 2 && response.isEmpty()) {
+        else if (progress == 2 && response.isEmpty()) { // should detect what kind of variation of "to be" is used, and repeat it accordingly
             if (statement.contains("is") || statement.contains("are")) {
                 String isare = "";
                 if (statement.contains("is")) {
@@ -197,28 +191,14 @@ public class ChatBot2
                 problemAdjective = statement.substring(findKeyword(statement, isare, 0) + isare.length() + 1);
                 response = "I see, so your " + problemObject + " " + isare + " " + problemAdjective + ".";
             }
-			/* RETIRED
-			else if (statement.contains("can't") || statement.contains("cant") || statement.contains("won't") || statement.contains("wont") || statement.contains("not") || statement.contains("dont") || statement.contains("don't")) {
-				String notter = "";
-				if (statement.contains("can't") || statement.contains("won't")){notter = "'t";}
-				else if (statement.contains("not")){notter = "not";}
-				else if (statement.contains("wont")){notter = "wont";}
-				else if (statement.contains("cant")){notter = "cant";}
-				problemVerb = statement.substring(statement.indexOf(notter) + notter.length() + 1);
-				if (findKeyword(statement,"my",0) >= 0) {problemObject = statement.substring(findKeyword(statement,"my",0) + 3, statement.indexOf(notter));}
-				else {problemObject = statement.substring(0,statement.indexOf(notter));}
-				response = "I see, so your " + problemObject + " " + problemVerb + ".";
-				progress = 3;
-			}
-			*/
-            else if (findKeyword(statement,"my") == 0) {
+            else if (findKeyword(statement,"my") == 0) { // if user just blankly says "my [thing]"
 
                 if (statement.split(" ").length == 2) {
                     problemObject = statement.split(" ")[1];
                     progress = 3;
                     response = "What about your " + problemObject + "?";
                 }
-                else {
+                else { // if user says "my [thing] [did this]", in other words if more than one word is detected
                     problemObject = statement.split(" ")[1];
                     for (int i = 0; i < statement.split(" ").length - 2; i ++) {
 						problemVerb += statement.split(" ")[2 + i];
@@ -230,19 +210,20 @@ public class ChatBot2
                     progress = 3;
                 }
             }
-            else if (findKeyword(statement,"it") >= 0 || findKeyword(statement, "they") >= 0) {
+            else if (findKeyword(statement,"it") >= 0 || findKeyword(statement, "they") >= 0) { // "[it/they] [did this]"
                 problemVerb = statement.split(" ")[1];
                 response = "I see, so your " + problemObject + " " + problemVerb + ".";
                 progress = 3;
             }
         }
-        else if (progress == 3 && response.isEmpty()) {
+        else if (progress == 3 && response.isEmpty()) { // if user asks for the solution/responds to wanting the solution
 			if (findKeyword(statement,"how") >= 0 || findKeyword(statement, "yes") >= 0) {
 				response = getRandomSolution();
 				if (response.contains("Here's a solution for you.")) manualHangUp = true;
+				// ^ there is one response where if you piss off the bot enough the bot flat out refuses to even give you a solution/hangs up
 				progress = 4;
 			}
-			else if (findKeyword(statement, "no") == 0) {
+			else if (findKeyword(statement, "no") == 0) { // well that's just plain rude
 			    emotion --;
 			    response = "Okay.";
 			    progress = 4;
@@ -261,7 +242,7 @@ public class ChatBot2
                     response = "You better be.";
                     manualHangUp = true;
                 }
-                if (findKeyword(statement,"no") == 0) {
+                if (findKeyword(statement,"no") == 0) { // this is one sassy bot
                     response = "I'm not satisfied with your cooperation.";
                     manualHangUp = true;
                 }
@@ -277,6 +258,17 @@ public class ChatBot2
                 }
             }
         }
+        else if (progress == 6 && response.isEmpty()) {
+        	if (findKeyword(statement,"yes") >= 0 || findKeyword(statement,"ok") >= 0 || findKeyword(statement,"sure") == 0 || findKeyword(statement,"alright") == 0 || findKeyword(statement, "okay") == 0 || findKeyword(statement, "yeah") == 0) {
+        		manualHangUp = true;
+        		response = "Please hold.";
+			}
+			else {
+				progress = 1;
+				emotion -= 0.5;
+				response = "Okay, how can I help you then?";
+			}
+		}
 		// Response transforming I want to statement
 		/*else if (findKeyword(statement, "I want to", 0) >= 0)
 		{
@@ -289,7 +281,7 @@ public class ChatBot2
 		if (response.isEmpty())
 		{
 			response = getRandomResponse();
-			emotion -= 0.2;
+			emotion -= 0.2; // lowering emotions so if the user spits out things that can't be recognized for long enough, the bot hangs up
 		}
 		return response;
 	}
@@ -476,7 +468,7 @@ public class ChatBot2
                 "Just read the manual.",
                 "Is it really that hard?",
                 "Here's a solution for you."
-        };
+        }; // i'm initializing the statements in here because the inserted variables need to update when this is called
 	    Random x = new Random();
         int y = x.nextInt(randomAngrySolutions.length);
 	    if (emotion >= -1) return randomNeutralSolutions[x.nextInt(randomNeutralSolutions.length)];

@@ -1,5 +1,16 @@
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
+
+/*
+Zeng
+Sales bot: sell eggs
+*/
 
 /**
  * A program to carry on conversations with a human user.
@@ -10,8 +21,15 @@ import java.util.Scanner;
 public class ChatBot1
 {
 	//emotion can alter the way our bot responds. Emotion can become more negative or positive over time.
-	int emotion = 0;
-
+	int item = 0;
+	int turns = 0;
+	double money = 0.00;
+	String[]userArr = {};
+	String[]responseArr = {};
+	String[]praiseArr = {"Those eggs are one of our best selling products. It's rarely in stock, so buy it before it runs out.", "These eggs are our best rated product. Our customers often survive the purchase" , "These eggs are organic and contain a wide variety of nutrients. In fact, many of our customer would recommend this product to someone they know!"};
+	int match;
+	ArrayList userInput = new ArrayList(Arrays.asList(userArr));
+	ArrayList responseOutput = new ArrayList(Arrays.asList(responseArr));
 	/**
 	 * Runs the conversation for this particular chatbot, should allow switching to other chatbots.
 	 * @param statement the statement typed by the user
@@ -19,33 +37,221 @@ public class ChatBot1
 	public void chatLoop(String statement)
 	{
 		Scanner in = new Scanner (System.in);
-		System.out.println (getGreeting());
-
-
+		getGreeting();
 		while (!statement.equals("Bye"))
 		{
-
-
 			statement = in.nextLine();
-			//getResponse handles the user reply
-			System.out.println(getResponse(statement));
-
-
+			if(responseOutput.toArray(userArr).length > 0)
+			{
+				match = -1;
+				for (int i = 0; i == responseOutput.toArray(responseArr).length -1; i++) {
+					if(userInput.toArray(userArr)[i].equals(statement.toLowerCase())) {
+						match = i;
+					}
+					else if(responseOutput.toArray(responseArr)[i].equals(getResponse(statement)))
+					{
+						match = i;
+					}
+				}
+				if (match != -1) {
+					System.out.println("As I said before, " + responseOutput.toArray(responseArr)[match]);
+				} else {
+					System.out.println(getResponse(statement));
+					userInput.add(turns, statement.toLowerCase());
+					responseOutput.add(turns, getResponse(statement));
+					turns++;
+				}
+			}
+			else
+			{
+				System.out.println(getResponse(statement));
+				userInput.add(turns, statement.toLowerCase());
+				responseOutput.add(turns, getResponse(statement));
+				turns++;
+			}
 		}
 
 	}
 	/**
-	 * Get a default greeting 	
+	 * Get a default greeting
 	 * @return a greeting
-	 */	
-	public String getGreeting()
-	{
-		return "Hi, what is up?";
+	 */
+	public int outArrCheck(String x) {
+		match = -1;
+		for (int i = 0; i == responseOutput.toArray(responseArr).length - 1; i++) {
+			if (findKeyword(responseOutput.toArray(responseArr)[i].toString(), x) >= 0) {
+				match = i;
+			}
+		}
+		return match;
 	}
-	
+	public void getGreeting()
+	{
+		System.out.println("Greetings. Welcome to Eggs Dee Sales Bot. What can I do for you?");
+		System.out.println("Option 1: Please say 'I want to buy large eggs' to see our selection of large eggs. This includes our famous Dragon Eggs.");
+		System.out.println("Option 2: Please say 'I want to buy small eggs' to see our selection of small eggs.");
+		System.out.println("Option 3: Please say 'Tell me about the quality of the eggs.' to know more about how we at Eggs Dee.inc obtain our eggs.");
+	}
+
+	public String Connection(String search) //provide the link for the google search for *type* eggs.
+	{
+		return ("https://www.google.com/search?safe=strict&source=hp&ei=ZqzEW-z7C4ep_QbU77PgAQ&q=" + search + "&btnK=Google+Search&oq=" + search);
+	}
+
+	public String eggs(String statement)
+	{
+		String output = "";
+		if (findKeyword(statement, "large eggs") >= 0) {
+			output = largeEggs();
+		} else if (findKeyword(statement, "small eggs") >= 0) {
+			output = smallEggs();
+		}
+		else if (findKeyword(statement, "large egg") >= 0) {
+			return largeEggs();
+		} else if (findKeyword(statement, "small egg") >= 0) {
+			output = smallEggs();
+		}
+		else
+		{
+			output = null;
+		}
+		return output;
+	}
+	public String largeEggs()// provide command menu for the large eggs
+	{
+		return "We have a variety of large eggs. Our products includes eggs from the following animals: dragons, dinosaurs, ostriches. " +
+				"\nYou can say 'I want to buy *animal* eggs' and I will add said eggs to the shopping cart for checkout. However, some of our eggs may be out of stock." +
+				"\nYou can also say 'Tell me about *animal* eggs' and I will provide you information regarding that egg.";
+	}
+
+	public String smallEggs()// provide command menu for the small eggs
+	{
+		return "We sell all kinds of small eggs, from the normal chicken eggs to the unusually shaped eggs from Dimension 142." +
+				"\nYou can say 'I want to buy *type* eggs' and I will add said eggs to the shopping cart for checkout. However, some of our eggs may be out of stock." +
+				"\nYou can also say 'Tell me about *animal* eggs' and I will provide you information regarding that egg.";
+	}
+
+	public String quality()// provide command menu for the quality of the eggs
+	{
+		return "Our eggs are produced through the use of our patented 'The Egg' machine invented by our founder, Dean Eggs";
+	}
+
+	public String stocks(String statement)
+	{
+		int amount = (int)(Math.random() * 10);
+		String info = "";
+		statement = statement.trim();
+		String lastChar = statement.substring(statement.length() - 1);
+		if (lastChar.equals("."))
+		{
+			statement = statement.substring(0, statement.length() - 1);
+		}
+		int psn;
+		String type;
+		if(findKeyword(statement,"Tell me about the") >=0) {
+			psn = findKeyword(statement, "Tell me about the", 0);
+			type = statement.substring(psn + 18).trim();
+		}
+		else {
+			psn = findKeyword(statement, "Tell me about", 0);
+			type = statement.substring(psn + 13).trim();
+		}
+		if(amount > 0)
+		{
+			info = "We still have " + amount +" " + type + " in stock.";
+
+		}
+		else if(amount == 0)
+		{
+			info = "Sorry, the " + type + " are out of stock.";
+		}
+		return info;
+	}
+	public String moreInfo1(String statement)
+	{
+		String data;
+		String type;
+		int psn;
+		if(findKeyword(statement,"Tell me about the") >=0) {
+			psn = findKeyword(statement, "Tell me about the", 0);
+			type = statement.substring(psn + 18).trim();
+		}
+		else {
+			psn = findKeyword(statement, "Tell me about", 0);
+			type = statement.substring(psn + 13).trim();
+		}
+		data = stocks(statement);
+		data += "\n" + praiseArr[(int)Math.random() * 3];
+		String search = type;
+		while(search.indexOf(" ") != -1)
+		{
+			search = search.substring(0 , type.indexOf(" ")) + "+" + type.substring(type.indexOf(" ")+1);
+		}
+		data += "\nFor more information go to:" + Connection(search);
+		return data;
+	}
+	public void checkout (String statement) {
+			int test = outArrCheck("eggs");
+			if (test != -1) {
+				if (findKeyword(responseOutput.toArray(responseArr)[test].toString(), "out of stock") >= 0) {
+					money += 0;
+				} else {
+					if(findKeyword(responseOutput.toArray(responseArr)[test].toString(), "large eggs") != -1 || findKeyword(responseOutput.toArray(responseArr)[test].toString(), "small eggs") != -1)
+					money += (Math.random() * 10 + 17);
+				}
+			}
+		}
+	public String purchase(String statement)
+	{
+		String out = "";
+		if(eggs(statement) != null)
+		{
+			out = eggs(statement);
+		}
+		else {
+			statement = statement.trim();
+			String lastChar = statement.substring(statement.length() - 1);
+			if (lastChar.equals(".")) {
+				statement = statement.substring(0, statement.length() - 1);
+			}
+			int psn;
+			String type = "";
+			if (findKeyword(statement, "I want to buy the") >= 0) {
+				psn = findKeyword(statement, "I want to buy the", 0);
+				type = statement.substring(psn + 17).trim();
+			}
+			else{
+				psn = findKeyword(statement, "I want to buy", 0);
+				type = statement.substring(psn + 13).trim();
+			}
+			int test = outArrCheck(type);
+			if(type.equals(" ") || type.equals("") || type == null)
+			{
+				out = "We sell eggs. What do you want to buy?";
+			}
+			else
+			{
+				if (test != -1) {
+					if (findKeyword(responseOutput.toArray(responseArr)[test].toString(), "out of stock") >= 0) {
+						out = "The item is out of stock";
+					} else {
+						out = "The item have been added to your shopping cart";
+					}
+				} else {
+					if (findKeyword(stocks(statement), "out of stock") >= 0) {
+						out = "The item is out of stock";
+					} else {
+						out = "The item have been added to your shopping cart";
+					}
+				}
+			}
+		}
+		return out;
+	}
+
 	/**
 	 * Gives a response to a user statement
-	 * 
+	 *
 	 * @param statement
 	 *            the user statement
 	 * @return a response based on the rules given
@@ -53,125 +259,55 @@ public class ChatBot1
 	public String getResponse(String statement)
 	{
 		String response = "";
-		
+
 		if (statement.length() == 0)
 		{
-			response = "Say something, please.";
+			int x = (int) Math.random();
+			if(x == 1)
+			{
+				response = "Please say that again, I didn't quite catch that.";
+			}
+			else
+			{
+				response = "I'm sorry, but can you say that again? I don't believe I heard you correctly.";
+			}
 		}
-
-		else if (findKeyword(statement, "no") >= 0)
+		else if(findKeyword(statement,"checkout") >= 0)
 		{
-			response = "Why so negative?";
-                	emotion--;
+			checkout(statement);
+			response = "Your total is $" + money;
 		}
-		
-		else if (findKeyword(statement, "levin") >= 0)
+		else if(findKeyword(statement,"I want to buy") >=0)
 		{
-			response = "More like LevinTheDream, amiright?";
-			emotion++;
+			response = purchase(statement);
 		}
-		else if (findKeyword(statement, "folwell") >= 0)
+		else if(findKeyword(statement, "Tell me about") >= 0)
 		{
-			response = "Watch your backpacks, Mr. Folwell doesn't fall well.";
-			emotion++;
+			if(findKeyword(statement,"quality") >= 0)
+			{
+				response = quality();
+				//calls qulaity method to ell about quality of eggs
+			}
+			else if(findKeyword(statement,"eggs") >= 0 || findKeyword(statement,"egg") >= 0)
+			{
+				response = moreInfo1(statement);
+				//match keyword "eggs" to call for moreinfo method
+			}
+			else
+			{
+				response = "Tell you about what? I can only provide information regarding eggs.";
+				//failsafe
+			}
 		}
-		else if (findKeyword(statement, "goldman") >= 0)
-		{
-			response = "Go for the gold, man.";
-			emotion++;
-		}
-
-		// Response transforming I want to statement
-		else if (findKeyword(statement, "I want to", 0) >= 0)
-		{
-			response = transformIWantToStatement(statement);
-		}
-		else if (findKeyword(statement, "I want",0) >= 0)
-		{
-			response = transformIWantStatement(statement);
-		}	
 		else
 		{
-			response = getRandomResponse();
+			response = "I don't understand that command, please try again.";
+			// Default response
 		}
-		
+
 		return response;
 	}
-	
-	/**
-	 * Take a statement with "I want to <something>." and transform it into 
-	 * "Why do you want to <something>?"
-	 * @param statement the user statement, assumed to contain "I want to"
-	 * @return the transformed statement
-	 */
-	private String transformIWantToStatement(String statement)
-	{
-		//  Remove the final period, if there is one
-		statement = statement.trim();
-		String lastChar = statement.substring(statement
-				.length() - 1);
-		if (lastChar.equals("."))
-		{
-			statement = statement.substring(0, statement
-					.length() - 1);
-		}
-		int psn = findKeyword (statement, "I want to", 0);
-		String restOfStatement = statement.substring(psn + 9).trim();
-		return "Why do you want to " + restOfStatement + "?";
-	}
 
-	
-	/**
-	 * Take a statement with "I want <something>." and transform it into 
-	 * "Would you really be happy if you had <something>?"
-	 * @param statement the user statement, assumed to contain "I want"
-	 * @return the transformed statement
-	 */
-	private String transformIWantStatement(String statement)
-	{
-		//  Remove the final period, if there is one
-		statement = statement.trim();
-		String lastChar = statement.substring(statement
-				.length() - 1);
-		if (lastChar.equals("."))
-		{
-			statement = statement.substring(0, statement
-					.length() - 1);
-		}
-		int psn = findKeyword (statement, "I want", 0);
-		String restOfStatement = statement.substring(psn + 6).trim();
-		return "Would you really be happy if you had " + restOfStatement + "?";
-	}
-	
-	
-	/**
-	 * Take a statement with "I <something> you" and transform it into 
-	 * "Why do you <something> me?"
-	 * @param statement the user statement, assumed to contain "I" followed by "you"
-	 * @return the transformed statement
-	 */
-	private String transformIYouStatement(String statement)
-	{
-		//  Remove the final period, if there is one
-		statement = statement.trim();
-		String lastChar = statement.substring(statement
-				.length() - 1);
-		if (lastChar.equals("."))
-		{
-			statement = statement.substring(0, statement
-					.length() - 1);
-		}
-		
-		int psnOfI = findKeyword (statement, "I", 0);
-		int psnOfYou = findKeyword (statement, "you", psnOfI);
-		
-		String restOfStatement = statement.substring(psnOfI + 1, psnOfYou).trim();
-		return "Why do you " + restOfStatement + " me?";
-	}
-	
-
-	
-	
 	/**
 	 * Search for one word in phrase. The search is not case
 	 * sensitive. This method will check that the given goal
@@ -235,11 +371,11 @@ public class ChatBot1
 
 		return -1;
 	}
-	
+
 	/**
 	 * Search for one word in phrase.  The search is not case sensitive.
 	 * This method will check that the given goal is not a substring of a longer string
-	 * (so, for example, "I know" does not contain "no").  The search begins at the beginning of the string.  
+	 * (so, for example, "I know" does not contain "no").  The search begins at the beginning of the string.
 	 * @param statement the string to search
 	 * @param goal the string to search for
 	 * @return the index of the first occurrence of goal in statement or -1 if it's not found
@@ -248,36 +384,4 @@ public class ChatBot1
 	{
 		return findKeyword (statement, goal, 0);
 	}
-	
-
-
-	/**
-	 * Pick a default response to use if nothing else fits.
-	 * @return a non-committal string
-	 */
-	private String getRandomResponse ()
-	{
-		Random r = new Random ();
-		if (emotion == 0)
-		{	
-			return randomNeutralResponses [r.nextInt(randomNeutralResponses.length)];
-		}
-		if (emotion < 0)
-		{	
-			return randomAngryResponses [r.nextInt(randomAngryResponses.length)];
-		}	
-		return randomHappyResponses [r.nextInt(randomHappyResponses.length)];
-	}
-	
-	private String [] randomNeutralResponses = {"Interesting, tell me more",
-			"Hmmm.",
-			"Do you really think so?",
-			"You don't say.",
-			"It's all boolean to me.",
-			"So, would you like to go for a walk?",
-			"Could you say that again?"
-	};
-	private String [] randomAngryResponses = {"Bahumbug.", "Harumph", "The rage consumes me!"};
-	private String [] randomHappyResponses = {"H A P P Y, what's that spell?", "Today is a good day", "You make me feel like a brand new pair of shoes."};
-	
 }
