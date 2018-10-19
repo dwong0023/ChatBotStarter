@@ -35,15 +35,19 @@ public class ChatBotRunner
 
 			if (statement.equals("1")) {
 				chatbot1.chatLoop(statement);
+				exitResponse();
 			}
 			else if (statement.equals("2")) {
 				chatbot2.chatLoop(statement);
+				exitResponse();
 			}
 			else if (statement.equals("3")) {
 			    chatbot3.chatLoop(statement);
+				exitResponse();
             }
             else if (statement.equals("4")) {
                 chatbot4.chatLoop(statement);
+				exitResponse();
             }
             else {
                 System.out.println("Sorry, I didn't catch anything. Your options are 1, 2, 3, or 4.");
@@ -54,6 +58,13 @@ public class ChatBotRunner
 
 
 		}
+	}
+	public static void exitResponse() {
+		System.out.println("Welcome back, you are speaking to the runner bot. Who would you like to talk to?");
+		System.out.println("Please type 1 for a salesperson (by Zeng Chen),");
+		System.out.println("2 for customer support (by Jesse Han),");
+		System.out.println("3 for the manager if you want a job (by Daniyah Wong),");
+		System.out.println("or 4 for the health inspector (by Parker Ahmed).");
 	}
 
 }
