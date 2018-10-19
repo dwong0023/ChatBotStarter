@@ -13,7 +13,7 @@ public class ChatBotRunner
 	 */
 	public static void main(String[] args)
 	{
-		ChatBot1 chatbot1 = new ChatBot1();
+		//ChatBot1 chatbot1 = new ChatBot1();
 		ChatBot2 chatbot2 = new ChatBot2();
 		ChatBot3 chatbot3 = new ChatBot3();
 		ChatBot4 chatbot4 = new ChatBot4();
@@ -33,11 +33,12 @@ public class ChatBotRunner
 			//This example has only chatbot1
 
 
-			if (statement.equals("1")) {
+			/*if (statement.equals("1")) {
 				chatbot1.chatLoop(statement);
 				exitResponse();
-			}
-			else if (statement.equals("2")) {
+			}*/
+			//else
+			if (statement.equals("2")) {
 				chatbot2.chatLoop(statement);
 				exitResponse();
 			}
