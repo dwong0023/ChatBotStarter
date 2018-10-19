@@ -24,23 +24,13 @@ public class ChatBot3
 		Scanner in = new Scanner (System.in);
 		System.out.println (getGreeting());
 
-
-		while(!statement.equals("Bye") && emotion >= -3)
+		while(!statement.equals("Bye"))
 		{
-
-
 			statement = in.nextLine();
 			//getResponse handles the user reply
 			System.out.println(getResponse(statement));
 		}
-		if(emotion == -3)
-		{
-			return "The manager has hung up.";
-		}
-		else
-		{
-			return "...";
-		}
+		return "...";
 	}
 	/**
 	 * Get a default greeting 	
@@ -54,7 +44,7 @@ public class ChatBot3
 		System.out.print("Alright, " + callername + ", are you calling about the job offer?");
 		Scanner yesno = new Scanner(System.in);
 		String joboff = yesno.nextLine();
-		if(joboff.indexOf("yes") != -1 || joboff.indexOf("yeah") != -1 || joboff.indexOf("yup") != -1)
+		if(joboff.indexOf("yes") != -1 || joboff.indexOf("yeah") != -1 || joboff.indexOf("yup") != -1||joboff.indexOf("yea") != -1)
 		{
 			System.out.println("That's great! Talk to me about what you want to be, what you want a salary of, your qualifications, or hours you want to work.");
 			return "What do you want to discuss?";
@@ -89,7 +79,11 @@ public class ChatBot3
 			response = "Say something, please.";
 			emotion--;
 		}
-		if(statement.length() <= 7)
+		else if (findKeyword(statement, "Bye",0) >= 0)
+		{
+			return "Your call will be redirected.";
+		}
+		else if(statement.length() <= 7)
 		{
 			return "Please respond in full sentences; I can't hear you too well, so I'll need the context.";
 		}
@@ -100,6 +94,10 @@ public class ChatBot3
 		else if (findKeyword(statement, "I want to work") >= 0)
 		{
 			response = "Alright. What do you want to be, " + callername + "?";
+		}
+		else if (findKeyword(statement, "discuss work") >= 0)
+		{
+			response = "We are discussing work.";
 		}
 		else if (findKeyword(statement, "discuss salary", 0) >= 0)
 		{
@@ -113,10 +111,14 @@ public class ChatBot3
 		{
 			response = "How many hours do you want to work for, " + callername + "?";
 		}
+		else if (findKeyword(statement, "I want to talk to",0) >= 0)
+		{
+			return "Alright, let me know when you're done with this conversation, and your call will be redirected.";
+		}
 
 
 		// Response transforming I want to statement
-		else if (findKeyword(statement, "I want to be the", 0) >= 0)
+		else if (findKeyword(statement, "I want to be", 0) >= 0)
 		{
 			response = transformIWantToStatement(statement);
 		}
@@ -159,9 +161,9 @@ public class ChatBot3
 		{
 			statement = statement.substring(0, statement.length() - 1);
 		}
-		int psn = findKeyword (statement, "I want to be the", 0);
-		String restOfStatement = statement.substring(psn + 17).trim();
-		return "So, you want to be the" + restOfStatement + "? I'll check if any of those positions are open.";
+		int psn = findKeyword (statement, "I want to be", 0);
+		String restOfStatement = statement.substring(psn + 13).trim();
+		return "So, you want to be " + restOfStatement + "? I'll check if any of those positions are open.";
 	}
 
 
@@ -297,6 +299,8 @@ public class ChatBot3
 			return "Interesting number of hours.";
 		}
 	}
+
+
 	
 	/**
 	 * Search for one word in phrase. The search is not case
